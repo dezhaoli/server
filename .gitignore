@@ -45,3 +45,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+GameServer-MJ/WebRoot/WEB-INF/classes/
+SoundChatServer/WebRoot/WEB-INF/classes/
+weipaiManage/WebRoot/WEB-INF/classes/
