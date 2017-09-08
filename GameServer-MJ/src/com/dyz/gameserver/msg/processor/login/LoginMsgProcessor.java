@@ -112,8 +112,10 @@ public class LoginMsgProcessor extends MsgProcessor implements INotAuthProcessor
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					String content = notice.getContent();
-					gameSession.sendMsg(new HostNoitceResponse(1, content));
+					if(notice != null) {
+						String content = notice.getContent();
+						gameSession.sendMsg(new HostNoitceResponse(1, content));
+					}
 			}else{
 				//断线重连
 				GameServerContext.add_onLine_Character(avatar);
@@ -138,8 +140,10 @@ public class LoginMsgProcessor extends MsgProcessor implements INotAuthProcessor
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				String content = notice.getContent();
-				gameSession.sendMsg(new HostNoitceResponse(1, content));
+				if(notice != null) {
+					String content = notice.getContent();
+					gameSession.sendMsg(new HostNoitceResponse(1, content));
+				}
 				
 			}
 		}
