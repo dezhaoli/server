@@ -133,7 +133,7 @@ public class AvatarVO {
  	}
 	/**
 	 * 移除最后一张牌
-	 * @param chupai
+//	 * @param chupai
 	 */
 	public void removeLastChupais() {
 		int inde = chupais.size();

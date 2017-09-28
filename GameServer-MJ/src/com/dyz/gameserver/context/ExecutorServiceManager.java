@@ -27,7 +27,8 @@ public class ExecutorServiceManager {
 	 * 初始化线程池
 	 */
 	public void initExecutorService(){
-		executorServiceForDB = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(10,new ServerThreadFactory("ExecutorServiceForDB"));
+		executorServiceForDB = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(10,
+				new ServerThreadFactory("ExecutorServiceForDB"));
 	}
 
 	/**

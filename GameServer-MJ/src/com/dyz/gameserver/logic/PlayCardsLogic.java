@@ -30,6 +30,7 @@ import com.dyz.gameserver.msg.response.hu.HuPaiResponse;
 import com.dyz.gameserver.msg.response.login.BackLoginResponse;
 import com.dyz.gameserver.msg.response.login.OtherBackLoginResonse;
 import com.dyz.gameserver.msg.response.peng.PengResponse;
+import com.dyz.gameserver.msg.response.chi.ChiResponse;
 import com.dyz.gameserver.msg.response.pickcard.OtherPickCardResponse;
 import com.dyz.gameserver.msg.response.pickcard.PickCardResponse;
 import com.dyz.gameserver.msg.response.roomcard.RoomCardChangerResponse;
@@ -634,11 +635,11 @@ public class PlayCardsLogic {
         				penAvatar.add(ava);
         				sb.append("peng:"+curAvatarIndex+":"+putOffCardPoint+",");
         			}
-//        			if ( roomVO.getRoomType() == 3  && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i){
-//        				//(长沙麻将)只有下一家才能吃
-//        				chiAvatar.add(ava);
-//        				sb.append("chi");
-//        			}
+        			if ( roomVO.getRoomType() == 3  && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i){
+        				//(长沙麻将)只有下一家才能吃
+        				chiAvatar.add(ava);
+						sb.append("chi:"+curAvatarIndex+":"+putOffCardPoint+",");
+        			}
         			if(sb.length()>1){
         				/*try {
         		 			Thread.sleep(300);
@@ -669,11 +670,11 @@ public class PlayCardsLogic {
 						penAvatar.add(ava);
 						sb.append("peng:"+curAvatarIndex+":"+putOffCardPoint+",");
 					}
-//					if ( roomVO.getRoomType() == 3  && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i){
-//						//(长沙麻将)只有下一家才能吃
-//						chiAvatar.add(ava);
-//						sb.append("chi");
-//					}
+					if ( roomVO.getRoomType() == 3  && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i){
+						//(长沙麻将)只有下一家才能吃
+						chiAvatar.add(ava);
+						sb.append("chi:"+curAvatarIndex+":"+putOffCardPoint+",");
+					}
 					if(sb.length()>1){
 						//system.out.println(sb);
 						/*try {
@@ -702,26 +703,51 @@ public class PlayCardsLogic {
     	//碰，杠都比吃优先
     	boolean flag = false;
     	//int avatarIndex = playerList.indexOf(avatar);
+		int cardIndex = cardVo.getCardPoint();
+		int onePointIndex = cardVo.getOnePoint();
+		int twoPointIndex = cardVo.getTwoPoint();
+		if(cardIndex != putOffCardPoint ){
+			System.out.println("传入错误的牌:传入的牌"+cardIndex+"---上一把出牌："+putOffCardPoint);
+		}
+
     	if(roomVO.getRoomType() == 3){
     		if(huAvatar.size() == 0 && penAvatar.size() == 0 && gangAvatar.size() == 0 && chiAvatar.size() > 0) {
     			if(chiAvatar.contains(avatar)){
+					avatar.avatarVO.setHasMopaiChupai(true);
     				//回放记录
-    	        	//PlayRecordOperation(playerList.indexOf(avatar),cardVo.getCardPoint(),3,-1);
+    	        	PlayRecordOperation(playerList.indexOf(avatar),cardIndex,3,-1, null,null);
+
+					//把出的牌从出牌玩家的chupais中移除掉
+					playerList.get(curAvatarIndex).avatarVO.removeLastChupais();
+					chiAvatar.remove(avatar);
+
     				//更新牌组
-    				avatar.putCardInList(cardVo.getCardPoint());
-					avatar.setCardListStatus(cardVo.getCardPoint(),4);
+    				avatar.putCardInList(cardIndex);
+					avatar.setCardListStatus(cardIndex,4);
+
+					//把各个玩家吃的牌记录到缓存中去,牌的index
+					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", cardIndex+"");
+
     				clearArrayAndSetQuest();
+
     				flag = true;
     				for (int i = 0; i < playerList.size(); i++) {
     					if(avatar.getUuId() == playerList.get(i).getUuId()){
     						//*****吃牌后面弄，需要修改传入的参数 CardVO
-//    						String str = "";.getClass()
+     						String str = "";
+							//avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", cardVo.getCardPoint()+"");
 //    						playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
     						//标记吃了的牌的下标//碰 1  杠2  胡3  吃4
-//    						playerList.get(i).avatarVO.getPaiArray()[1][cardVo.getCardPoint()] = 1 ;
-//    						playerList.get(i).avatarVO.getPaiArray()[1][cardVo.getOnePoint()] = 1;
-//    						playerList.get(i).avatarVO.getPaiArray()[1][cardVo.getOnePoint()] = 1;
+							//playerList.get(i).putResultRelation(1,cardIndex+"");
+
+    						playerList.get(i).avatarVO.getPaiArray()[4][cardIndex] = 1 ;
+    						playerList.get(i).avatarVO.getPaiArray()[4][onePointIndex] = 1;
+    						playerList.get(i).avatarVO.getPaiArray()[4][twoPointIndex] = 1;
     					}
+
+
+						playerList.get(i).getSession().sendMsg(
+								new ChiResponse(1,cardIndex, onePointIndex, twoPointIndex, playerList.indexOf(avatar)));
 					}
     				 //curAvatarIndex = avatarIndex;// 2016-8-1注释掉
     				//更新用户的正常牌组(不算上碰，杠，胡，吃)吃牌这里还需要修改****

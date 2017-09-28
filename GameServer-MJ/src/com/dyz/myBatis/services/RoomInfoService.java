@@ -25,7 +25,7 @@ public class RoomInfoService {
 	    
 	    /**
 	     * 创建roomInfo
-	     * @param roomInfo
+	     * @param roomVO
 	     * @return
 	     */
 	    public int createRoomInfo(RoomVO roomVO){

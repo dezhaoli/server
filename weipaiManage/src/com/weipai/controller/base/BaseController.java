@@ -10,9 +10,10 @@ public class BaseController {
 	/**
 	 * 公用返回app段需要的json信息
 	 * @param response
-	 * @param json
+	 * @param str
 	 */
 	public  void returnMessage(HttpServletResponse response , Object str){
+//		response.setContentType("application/json; charset=utf-8");
 		PrintWriter write = null;
 		try {
 			write = response.getWriter();

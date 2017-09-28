@@ -44,7 +44,7 @@ public class NetManager {
 		
 		int recsize = 1024*1024*2;
 		int sendsize = 1024*1024*2;
-		int timeout = 10;
+		int timeout = 100;
 		//
 		SocketSessionConfig sc = acceptor.getSessionConfig();
 		sc.setReuseAddress(true);// 设置每一个非主监听连接的端口可以重用

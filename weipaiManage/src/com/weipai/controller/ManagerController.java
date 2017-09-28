@@ -389,6 +389,7 @@ public class ManagerController extends BaseController {
 	 */
 	@RequestMapping("/sendNotice")
 	public void sendNotice(HttpServletRequest request, HttpServletResponse response){
+		response.setContentType("application/json; charset=utf-8");
 		HttpSession session = request.getSession();
 		JSONObject json = new JSONObject();
 		if(session != null){

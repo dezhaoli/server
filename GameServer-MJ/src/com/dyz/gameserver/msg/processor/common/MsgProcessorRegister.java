@@ -60,7 +60,7 @@ public enum MsgProcessorRegister {
 	chiPai(ConnectAPI.CHIPAI_REQUEST,new ChiMsgProcessor()),
 	/**碰牌*/
 	pengPai(ConnectAPI.PENGPAI_REQUEST,new PengMsgProcessor()),
-	/**碰牌*/
+	/**杠牌*/
 	gangPai(ConnectAPI.GANGPAI_REQUEST,new GangMsgProcessor()),
 	/**放弃操作*/
 	gaveUp(ConnectAPI.GAVEUP_REQUEST,new GaveUpMsgProcessor()),

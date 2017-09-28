@@ -54,7 +54,7 @@ public class RoomManager {
     }
     /**
      * 移除房间/销毁房间
-     * @param avatar
+     * @param roomVO
      */
     public void destroyRoom(RoomVO roomVO){
     	RoomLogic roomLogic = roomList.get(roomVO.getRoomId());

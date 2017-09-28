@@ -43,6 +43,7 @@ public class GameServer {
 	}
 	public static void startUp(){
 		try {
+			//System.out.println("gameserer start");
 			logger.info("开始启动服务器 ...");
 			ExecutorServiceManager.getInstance().initExecutorService();
 			logger.info("初始化服务器线程池完成");

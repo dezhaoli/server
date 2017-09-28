@@ -12,6 +12,7 @@ import com.dyz.gameserver.msg.response.ErrorResponse;
 import com.dyz.gameserver.msg.response.chi.ChiResponse;
 import com.dyz.gameserver.pojo.CardVO;
 import com.dyz.persist.util.JsonUtilTool;
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -27,13 +28,14 @@ public class ChiMsgProcessor extends MsgProcessor implements
            CardVO cardVO = JsonUtilTool.fromJson(request.getString(),CardVO.class);
            boolean isChi =  roomLogic.chiCard(gameSession.getRole(Avatar.class),cardVO);
            if(isChi){
-        	   gameSession.sendMsg(new ChiResponse(1, "1"));
+
            }
            else{
         	   System.out.println("吃不起");
            }
         }else{
             gameSession.sendMsg(new ErrorResponse(ErrorCode.Error_000005));
+            
         }
 
     }

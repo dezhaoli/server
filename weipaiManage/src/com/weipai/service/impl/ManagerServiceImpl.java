@@ -37,7 +37,7 @@ public class ManagerServiceImpl implements ManagerService {
 	
 	public static final String IP_ADDR = "localhost";//服务器地址 
 	public static final int PORT = 10123;//服务器端口号  
-	
+
 	@Resource
 	ManagerMapper managerMapper;
 	@Resource
@@ -85,7 +85,7 @@ public class ManagerServiceImpl implements ManagerService {
 
 	
 	/**
-     * @param id  被充值玩家
+     * @param accountid  被充值玩家
      * @param manager 充值管理员
      * @param payCardNum  充值房卡的数量
      * @return
@@ -121,7 +121,7 @@ public class ManagerServiceImpl implements ManagerService {
 						Socket socket = null;
 			        	try {
 			        		//创建一个流套接字并将其连接到指定主机上的指定端口号
-			        		socket = new Socket(IP_ADDR, PORT);  
+			        		socket = new Socket(IP_ADDR, PORT);
 				            //读取服务器端数据  
 				            DataInputStream input = new DataInputStream(socket.getInputStream());  
 				            //向服务器端发送数据  
@@ -129,7 +129,7 @@ public class ManagerServiceImpl implements ManagerService {
 				            Thread.sleep(1000);
 							//不同操作不同的ConnectAPI.CREATEROOM_REQUEST值    消息处理方式
 							ClientSendRequest loginSend = new ClientSendRequest(0x158888);
-							
+
 							loginSend.output.writeUTF(sendInfo);
 							out.write(loginSend.entireMsg().array());
 							
