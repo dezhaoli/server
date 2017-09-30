@@ -13,13 +13,31 @@ public class NormalHuPai {
     
     
     public static void main(String[] args){
-    	int[] pai = new int[]{0,0,0,3,1,0,1,1,1, 0, 0, 0,0,0,0,0,0,0,0,0,1,2,0,1,1,1,1};
+    	int[] pai = new int[]{1,2,3, 4,5,6 ,6,7,8, 9, 10, 11, 31, 31};
+
     	//int [] pai = new int[]{0,0,0,0,0,0,1,1,1,     0,0,2,0,3,1,1,1,0,     0,0,1,1,1,0,0,0,0,   0,0,0,0,0,0,0};
     	NormalHuPai normalHuPai = new NormalHuPai();
-    	boolean flag = normalHuPai.isZZHuPai(pai);
+    	boolean flag = normalHuPai.isHSHuPai(pai);
     	System.out.println(flag);
     }
-    
+
+    public boolean checkGDhu(int[][] paiList){
+        JIANG = 0;
+        int[] pai =GlobalUtil.CloneIntList(paiList[0]);
+        for(int i=0;i<paiList[0].length;i++){
+            if(paiList[1][i] == 1 && pai[i] >= 3) {
+                pai[i] -= 3;
+            }else if(paiList[1][i] == 2 && pai[i] == 4){
+                pai[i]  -= 4;
+            }else if(paiList[1][i] == 4){
+                pai[i] -= 1;
+            }
+        }
+        return isHSHuPai(pai);
+
+    }
+
+
     
     /**
      * 判断转转麻将普通胡牌

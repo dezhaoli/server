@@ -75,12 +75,36 @@ public class HuPaiType {
 			  huaShui(avatarShu , avatar, cardIndex,playerList,count);
 			  return new ArrayList<>();
 		 }
-		 else{
+		 else if(roomType == 3){
+			 // 广东麻将
+			 guangDong(avatarShu , avatar, cardIndex,playerList,count);
+
 			 //长沙麻将
-			 changSha(avatarShu,  avatar ,cardIndex);
+			 //changSha(avatarShu,  avatar ,cardIndex);
 			  return new ArrayList<>();
 		 }
+		return new ArrayList<>();
 	}
+
+	/**
+	 * 广东麻将
+	 * @param avatarShu  输家
+	 * @param avatar  自己
+	 * @param cardIndex
+	 * @param playerList
+	 * @param huCount 是否是一炮多响
+	 */
+	public static void guangDong(Avatar avatarShu , Avatar avatar,  int cardIndex ,
+								 List<Avatar> playerList , int huCount){
+		int score = 0;
+		if(avatarShu.getUuId() == avatar.getUuId() ) {
+			//自摸类型
+		} else {
+
+		}
+	}
+
+
 	/**
 	 * 划水麻将
 	 * @param avatarShu  输家
@@ -410,9 +434,9 @@ public class HuPaiType {
 	
 	/**
 	 * 长沙麻将
-	 * @param uuid
+	 * @param avatarShu
 	 * @param avatar
-	 * @param str
+	 * @param cardIndex
 	 * @return
 	 */
 	private static void changSha(Avatar  avatarShu , Avatar avatar , int cardIndex){

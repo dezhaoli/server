@@ -39,4 +39,40 @@ public class GlobalUtil {
         }
         return result;
     }
+
+    public static String PrintPaiList(int[] list) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < list.length; i++) {
+            String s = "";
+            if (list[i] > 0) {
+                for (int j = 0; j < list[i]; j++) {
+                    if (i >= 0 && i <= 8) {
+                        s = Integer.toString(i + 1) + "万";
+                    } else if (i >= 9 && i <= 17) {
+                        s = Integer.toString(i - 9 + 1) + "索";
+                    } else if (i >= 18 && i <= 26) {
+                        s = Integer.toString(i - 18 + 1) + "筒";
+                    } else if (i == 27) {
+                        s = "东";
+                    } else if (i == 28) {
+                        s = "南";
+                    } else if (i == 29) {
+                        s = "西";
+                    } else if (i == 30) {
+                        s = "北";
+                    } else if (i == 31) {
+                        s = "中";
+                    } else if (i == 32) {
+                        s = "发";
+                    } else if (i == 33) {
+                        s = "白";
+                    }
+
+                    buf.append(s + ",");
+                }
+            }
+        }
+
+        return buf.toString();
+    }
 }

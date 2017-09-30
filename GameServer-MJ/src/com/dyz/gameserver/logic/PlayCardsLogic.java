@@ -34,14 +34,7 @@ import com.dyz.gameserver.msg.response.chi.ChiResponse;
 import com.dyz.gameserver.msg.response.pickcard.OtherPickCardResponse;
 import com.dyz.gameserver.msg.response.pickcard.PickCardResponse;
 import com.dyz.gameserver.msg.response.roomcard.RoomCardChangerResponse;
-import com.dyz.gameserver.pojo.AvatarVO;
-import com.dyz.gameserver.pojo.CardVO;
-import com.dyz.gameserver.pojo.FinalGameEndItemVo;
-import com.dyz.gameserver.pojo.HuReturnObjectVO;
-import com.dyz.gameserver.pojo.PlayBehaviedVO;
-import com.dyz.gameserver.pojo.PlayRecordGameVO;
-import com.dyz.gameserver.pojo.PlayRecordItemVO;
-import com.dyz.gameserver.pojo.RoomVO;
+import com.dyz.gameserver.pojo.*;
 import com.dyz.myBatis.model.Account;
 import com.dyz.myBatis.model.PlayRecord;
 import com.dyz.myBatis.model.Standings;
@@ -54,11 +47,8 @@ import com.dyz.myBatis.services.StandingsAccountRelationService;
 import com.dyz.myBatis.services.StandingsDetailService;
 import com.dyz.myBatis.services.StandingsRelationService;
 import com.dyz.myBatis.services.StandingsService;
-import com.dyz.persist.util.DateUtil;
-import com.dyz.persist.util.HuPaiType;
-import com.dyz.persist.util.Naizi;
-import com.dyz.persist.util.NormalHuPai;
-import com.dyz.persist.util.StringUtil;
+import com.dyz.persist.util.*;
+import sun.security.x509.AVA;
 
 
 /**
@@ -1742,7 +1732,8 @@ public class PlayCardsLogic {
         }
         else{
         	//长沙麻将
-        	return checkHuChangsha(avatar);
+        	//return checkHuChangsha(avatar);
+			return checkHuGuangDong(avatar, cardIndex);
         }
         
         
@@ -1890,6 +1881,124 @@ public class PlayCardsLogic {
 		return flag;
     	
     }
+
+
+	/**
+	 * 判断是否清一色
+	 * @param paivo
+
+	 * @return
+	 */
+	public boolean checkQYS(PaiVO paivo) {
+		// 保证没字牌
+		if (paivo.getFengCount() > 0 || paivo.getZfbCount() > 0) {
+			return false;
+		}
+
+		// 保证单花色
+		if (paivo.getWanCount() > 0 && paivo.getTiaoCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getTiaoCount() > 0 && paivo.getTongCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getWanCount() > 0 && paivo.getTongCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否混一色
+	public boolean checkHYS(PaiVO paivo) {
+		// 保证有字牌
+		if (paivo.getFengCount() == 0 && paivo.getZfbCount() == 0) {
+			return false;
+		}
+
+		//  保证单花色
+		if (paivo.getWanCount() > 0 && paivo.getTiaoCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getTiaoCount() > 0 && paivo.getTongCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getWanCount() > 0 && paivo.getTongCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否小三元
+	public boolean checkXSY(PaiVO paivo) {
+		if (paivo.getZhongCount() == 2 && paivo.getFaCount() == 3 && paivo.getBaiCount() == 3)
+			return true;
+
+		if (paivo.getZhongCount() == 3 && paivo.getFaCount() == 2 && paivo.getBaiCount() == 3)
+			return true;
+
+		if (paivo.getZhongCount() == 3 && paivo.getFaCount() == 3 && paivo.getBaiCount() == 2)
+			return true;
+
+		return false;
+	}
+
+
+	/**
+	 * 判断广东麻将胡类型
+	 * @param pai
+	 * @return
+	 */
+	public int checkGuangDongHuType(int[] pai) {
+		int type = 0;
+
+		PaiVO paivo = new PaiVO(pai);
+
+
+		if (checkQYS(paivo))
+			return 16;
+
+		if (checkHYS(paivo))
+			return 4;
+
+		if (checkXSY(paivo))
+			return 32;
+
+
+
+		return type;
+	}
+
+	/**
+	 * 判断广东麻将是否胡牌
+	 * @param avatar
+	 * @param cardIndex
+	 * @return
+	 */
+    public boolean checkHuGuangDong(Avatar avatar, Integer cardIndex){
+		boolean flag = false;
+		int [][] paiList =  avatar.getPaiArray();
+		int[] pai = GlobalUtil.CloneIntList(paiList[0]);
+//		System.out.println(avatar.getUuId() + ":" +GlobalUtil.PrintPaiList(pai));
+
+		NormalHuPai normalHuPai = new NormalHuPai();
+		flag = normalHuPai.isZZHuPai(pai);
+
+		if (flag) {
+			// 判断胡牌类型
+			int[] hupai = GlobalUtil.CloneIntList(paiList[0]);
+			avatar.avatarVO.setHuType(checkGuangDongHuType(hupai));
+		}
+
+		return flag;
+	}
+
+
     /**
      * 判断长沙麻将是否胡牌
      * @param avatar

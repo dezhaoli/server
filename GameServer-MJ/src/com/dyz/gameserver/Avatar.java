@@ -413,7 +413,7 @@ public class Avatar implements GameObj {
     				|| (cardList[5] >=1 && cardList[6] >=1))){
     			flag = true;
     		}
-    		else if(cardIndex >=11 && cardIndex <= 15){
+    		else if(cardIndex >=2 && cardIndex <= 6){
     		  if((cardList[cardIndex-1] >=1 && cardList[cardIndex+1] >=1)
     				|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1) 
     				|| (cardList[cardIndex+1] >=1 && cardList[cardIndex+2] >=1)){
@@ -444,7 +444,7 @@ public class Avatar implements GameObj {
     		  }
     		}
     	}
-    	else if(cardIndex>=18 && cardIndex <=27){
+    	else if(cardIndex>=18 && cardIndex <=26){
     		if(cardIndex == 18 && cardList[19] >=1 && cardList[20] >=1 ){
     			flag = true;
     		}
@@ -452,14 +452,14 @@ public class Avatar implements GameObj {
     				|| (cardList[20] >=1 && cardList[21] >=1))){
     			flag = true;
     		}
-    		else if(cardIndex ==27 && cardList[26] >=1 && cardList[25] >=1){
+    		else if(cardIndex ==26 && cardList[25] >=1 && cardList[24] >=1){
     			flag = true;
     		}
-    		else if(cardIndex ==26 && ((cardList[25] >=1 && cardList[27] >=1)
-    				|| (cardList[24] >=1 && cardList[25] >=1))){
+    		else if(cardIndex ==25 && ((cardList[26] >=1 && cardList[24] >=1)
+    				|| (cardList[24] >=1 && cardList[23] >=1))){
     			flag = true;
     		}
-    		else if(cardIndex >=20 && cardIndex <= 25){
+    		else if(cardIndex >=20 && cardIndex <= 24){
 	    		 if((cardList[cardIndex-1] >=1 && cardList[cardIndex+1] >=1)
 	    			|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1) 
 	    			|| (cardList[cardIndex+1] >=1 && cardList[cardIndex+2] >=1)){
@@ -467,7 +467,8 @@ public class Avatar implements GameObj {
     		  } 
     		}
     	}
-        return flag;
+        //return flag;
+        return false;
     }
 
     /**
