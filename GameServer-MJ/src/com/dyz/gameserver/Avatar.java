@@ -467,8 +467,8 @@ public class Avatar implements GameObj {
     		  } 
     		}
     	}
-        //return flag;
-        return false;
+        return flag;
+        //return false;
     }
 
     /**
