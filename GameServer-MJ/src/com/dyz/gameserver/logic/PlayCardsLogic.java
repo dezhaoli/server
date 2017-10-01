@@ -48,7 +48,7 @@ import com.dyz.myBatis.services.StandingsDetailService;
 import com.dyz.myBatis.services.StandingsRelationService;
 import com.dyz.myBatis.services.StandingsService;
 import com.dyz.persist.util.*;
-import sun.security.x509.AVA;
+//import sun.security.x509.AVA;
 
 
 /**
