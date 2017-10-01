@@ -1936,16 +1936,81 @@ public class PlayCardsLogic {
 
 	// 判断是否小三元
 	public boolean checkXSY(PaiVO paivo) {
-		if (paivo.getZhongCount() == 2 && paivo.getFaCount() == 3 && paivo.getBaiCount() == 3)
+		if (paivo.getZhongCount() == 2 && paivo.getFaCount() >= 3 && paivo.getBaiCount() >= 3)
 			return true;
 
-		if (paivo.getZhongCount() == 3 && paivo.getFaCount() == 2 && paivo.getBaiCount() == 3)
+		if (paivo.getZhongCount() >= 3 && paivo.getFaCount() == 2 && paivo.getBaiCount() >= 3)
 			return true;
 
-		if (paivo.getZhongCount() == 3 && paivo.getFaCount() == 3 && paivo.getBaiCount() == 2)
+		if (paivo.getZhongCount() >= 3 && paivo.getFaCount() >= 3 && paivo.getBaiCount() == 2)
 			return true;
 
 		return false;
+	}
+
+	// 判断是否大三元
+	public boolean checkDSY(PaiVO paivo) {
+		if (paivo.getZhongCount() < 3 || paivo.getFaCount() < 3 || paivo.getBaiCount() < 3) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否小四喜
+	public boolean checkXSX(PaiVO paivo) {
+		if (paivo.getDongCount() == 2 && paivo.getNanCount() >= 3 && paivo.getXiCount() >= 3 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() == 2 && paivo.getXiCount() >= 3 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() >= 3 && paivo.getXiCount() == 2 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() >= 3 && paivo.getXiCount() >= 3 && paivo.getBeiCount() == 2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// 判断是否大四喜
+	public boolean checkDSX(PaiVO paivo) {
+		if (paivo.getDongCount() < 3 || paivo.getNanCount() < 3 || paivo.getXiCount() <  3 || paivo.getBeiCount() < 3)
+			return false;
+
+		return true;
+	}
+
+	// 判断是否字一色
+	public boolean checkZYS(PaiVO paivo) {
+		if (paivo.getWanCount() > 0 || paivo.getTiaoCount() > 0 || paivo.getTongCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否清幺九
+	public boolean checkQYJ(PaiVO paivo) {
+		if (paivo.getFaCount() > 0 || paivo.getZfbCount() > 0 || paivo.getNotyaojiuCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否混幺九
+	public boolean checkHYJ(PaiVO paivo) {
+		if (paivo.getNotyaojiuCount() > 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 
@@ -1969,7 +2034,23 @@ public class PlayCardsLogic {
 		if (checkXSY(paivo))
 			return 32;
 
+		if (checkDSY(paivo))
+			return 64;
 
+		if (checkXSX(paivo))
+			return 32;
+
+		if (checkDSX(paivo))
+			return 64;
+
+		if (checkZYS(paivo))
+			return 64;
+
+		if (checkQYJ(paivo))
+			return 64;
+
+		if (checkHYJ(paivo))
+			return 32;
 
 		return type;
 	}
