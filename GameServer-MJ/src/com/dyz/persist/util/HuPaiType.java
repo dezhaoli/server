@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.math.Fraction;
+import com.dyz.gameserver.pojo.PaiVO;
 
 import java.util.Set;
 
 import com.context.Rule;
 import com.dyz.gameserver.Avatar;
-import com.dyz.gameserver.logic.PlayCardsLogic;
 
 /**
  * 判断胡牌类型
@@ -542,5 +541,235 @@ public class HuPaiType {
 	public void setValidMa(List<Integer> validMa) {
 		this.validMa = validMa;
 	}
-	
+
+
+	// 广东麻将胡牌类型
+	/**
+	 * 判断是否清一色
+	 * @param paivo
+
+	 * @return
+	 */
+	public boolean checkQYS(PaiVO paivo) {
+		// 保证没字牌
+		if (paivo.getFengCount() > 0 || paivo.getZfbCount() > 0) {
+			return false;
+		}
+
+		// 保证单花色
+		if (paivo.getWanCount() > 0 && paivo.getTiaoCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getTiaoCount() > 0 && paivo.getBingCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getWanCount() > 0 && paivo.getBingCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否混一色
+	public boolean checkHYS(PaiVO paivo) {
+		// 保证有字牌
+		if (paivo.getFengCount() == 0 && paivo.getZfbCount() == 0) {
+			return false;
+		}
+
+		//  保证单花色
+		if (paivo.getWanCount() > 0 && paivo.getTiaoCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getTiaoCount() > 0 && paivo.getBingCount() > 0) {
+			return false;
+		}
+
+		if (paivo.getWanCount() > 0 && paivo.getBingCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否小三元
+	public boolean checkXSY(PaiVO paivo) {
+		if (paivo.getZhongCount() == 2 && paivo.getFaCount() >= 3 && paivo.getBaiCount() >= 3)
+			return true;
+
+		if (paivo.getZhongCount() >= 3 && paivo.getFaCount() == 2 && paivo.getBaiCount() >= 3)
+			return true;
+
+		if (paivo.getZhongCount() >= 3 && paivo.getFaCount() >= 3 && paivo.getBaiCount() == 2)
+			return true;
+
+		return false;
+	}
+
+	// 判断是否大三元
+	public boolean checkDSY(PaiVO paivo) {
+		if (paivo.getZhongCount() < 3 || paivo.getFaCount() < 3 || paivo.getBaiCount() < 3) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否小四喜
+	public boolean checkXSX(PaiVO paivo) {
+		if (paivo.getDongCount() == 2 && paivo.getNanCount() >= 3 && paivo.getXiCount() >= 3 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() == 2 && paivo.getXiCount() >= 3 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() >= 3 && paivo.getXiCount() == 2 && paivo.getBeiCount() >= 3) {
+			return true;
+		}
+
+		if (paivo.getDongCount() >= 3 && paivo.getNanCount() >= 3 && paivo.getXiCount() >= 3 && paivo.getBeiCount() == 2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// 判断是否大四喜
+	public boolean checkDSX(PaiVO paivo) {
+		if (paivo.getDongCount() < 3 || paivo.getNanCount() < 3 || paivo.getXiCount() <  3 || paivo.getBeiCount() < 3)
+			return false;
+
+		return true;
+	}
+
+	// 判断是否字一色
+	public boolean checkZYS(PaiVO paivo) {
+		if (paivo.getWanCount() > 0 || paivo.getTiaoCount() > 0 || paivo.getBingCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否清幺九
+	public boolean checkQYJ(PaiVO paivo) {
+		if (paivo.getFengCount() > 0 || paivo.getZfbCount() > 0 || paivo.getNotyaojiuCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否混幺九
+	public boolean checkHYJ(PaiVO paivo) {
+		if (paivo.getNotyaojiuCount() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否十三幺
+	public boolean checkSSY(PaiVO paivo) {
+		int sum = paivo.getDongCount() + paivo.getNanCount() + paivo.getXiCount() + paivo.getBeiCount() +
+				paivo.getZhongCount() + paivo.getFaCount() + paivo.getBaiCount() + paivo.getWanNCount(1) +
+				paivo.getWanNCount(9) + paivo.getTiaoNCount(1) + paivo.getTiaoNCount(9) +
+				paivo.getBingNCount(1) + paivo.getBingNCount(9);
+
+		if (paivo.getDongCount() > 0 && paivo.getNanCount() > 0 && paivo.getXiCount() > 0 && paivo.getBeiCount() > 0 &&
+				paivo.getZhongCount() > 0 && paivo.getFaCount() > 0 && paivo.getBaiCount() > 0 &&
+				paivo.getWanNCount(1) > 0 && paivo.getWanNCount(9) > 0 && paivo.getTiaoNCount(1) > 0 &&
+				paivo.getTiaoNCount(9) > 0 && paivo.getBingNCount(1) > 0 && paivo.getBingNCount(9) > 0 && sum >= 14) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 判断是否九莲宝灯
+	public boolean checkJLBD(PaiVO paivo) {
+		// 不是清一色，就不是九莲宝灯
+		if (!checkQYS(paivo)) {
+			return false;
+		}
+
+		if (paivo.getWanCount() > 0) {
+			int sum = 0;
+			for (int i = 1; i <= 9; i++) {
+				sum += paivo.getWanNCount(i);
+			}
+
+			if (paivo.getWanNCount(1) >= 3 && paivo.getWanNCount(2) > 0 && paivo.getWanNCount(3) > 0 &&
+					paivo.getWanNCount(4) > 0 && paivo.getWanNCount(5) > 0 && paivo.getWanNCount(6) > 0 &&
+					paivo.getWanNCount(7) > 0 && paivo.getWanNCount(8) > 0 && paivo.getWanNCount(9) >= 3 && sum >= 14) {
+				return true;
+			}
+		}
+
+		if (paivo.getTiaoCount() > 0) {
+			int sum = 0;
+			for (int i = 1; i <= 9; i++) {
+				sum += paivo.getTiaoNCount(i);
+			}
+
+			if (paivo.getTiaoNCount(1) >= 3 && paivo.getTiaoNCount(2) > 0 && paivo.getTiaoNCount(3) > 0 &&
+					paivo.getTiaoNCount(4) > 0 && paivo.getTiaoNCount(5) > 0 && paivo.getTiaoNCount(6) > 0 &&
+					paivo.getTiaoNCount(7) > 0 && paivo.getTiaoNCount(8) > 0 && paivo.getTiaoNCount(9) >= 3 && sum >= 14) {
+				return true;
+			}
+		}
+
+		if (paivo.getBingCount() > 0) {
+			int sum = 0;
+			for (int i = 1; i <= 9; i++) {
+				sum += paivo.getBingNCount(i);
+			}
+
+			if (paivo.getBingNCount(1) >= 3 && paivo.getBingNCount(2) > 0 && paivo.getBingNCount(3) > 0 &&
+					paivo.getBingNCount(4) > 0 && paivo.getBingNCount(5) > 0 && paivo.getBingNCount(6) > 0 &&
+					paivo.getBingNCount(7) > 0 && paivo.getBingNCount(8) > 0 && paivo.getBingNCount(9) >= 3 && sum >= 14) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	// 判断是否碰碰胡
+	public boolean checkPPH(PaiVO paivo) {
+		if (paivo.getChis() > 0) {
+			return false;
+		}
+
+		for (int i = 0; i < paivo.getPaiSize(); i++) {
+			if (paivo.getPaiCount(i) > 0 && paivo.getPaiCount(i) < 2)
+				return false;
+		}
+
+		return true;
+	}
+
+	// 判断是否混碰
+	public boolean checkHP(PaiVO paivo) {
+		if (checkHYS(paivo) && checkPPH(paivo)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// 判断是否清碰
+	public boolean checkQP(PaiVO paivo) {
+		if (checkQYS(paivo) && checkPPH(paivo)) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

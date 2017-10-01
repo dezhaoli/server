@@ -250,23 +250,34 @@ public class Avatar implements GameObj {
 //    	System.out.println("杠了的牌="+cardIndex+"====="+resultRelation.get(2));
 //    	System.out.println("碰了的牌="+cardIndex+"====="+resultRelation.get(1));
     	boolean flag = false;
-        if(avatarVO.getPaiArray()[0][cardIndex] >= 2 ){
-        	if(resultRelation.get(1) == null ){
-        		flag = true;
-        	}
-        	else{
-        		String strs [] = resultRelation.get(1).split(",");
-        		for (int i = 0; i < strs.length; i++) {
-        			if(strs[i].equals(cardIndex+"")){
-						flag  =  false;
-						 i = strs.length;
-					}
-					else{
-						flag  =  true;
-					}
-				}
-        	}
+
+        int []  cardList = avatarVO.getPaiArray()[0];
+        for (int i = 0; i < cardList.length; i++) {
+            cardList[i] -= avatarVO.getPaiArray()[1][i] * 3;
+            cardList[i] -= avatarVO.getPaiArray()[4][i];
         }
+
+        if (cardList[cardIndex] >= 2) {
+            flag = true;
+        }
+
+//        if(avatarVO.getPaiArray()[0][cardIndex] >= 2 ){
+//        	if(resultRelation.get(1) == null ){
+//        		flag = true;
+//        	}
+//        	else{
+//        		String strs [] = resultRelation.get(1).split(",");
+//        		for (int i = 0; i < strs.length; i++) {
+//        			if(strs[i].equals(cardIndex+"")){
+//						flag  =  false;
+//						 i = strs.length;
+//					}
+//					else{
+//						flag  =  true;
+//					}
+//				}
+//        	}
+//        }
         return flag;
     }
 
@@ -314,7 +325,7 @@ public class Avatar implements GameObj {
     	if(!roomVO.isAddWordCard()){
     		//划水麻将没有风牌  就27
     		for (int i= 0 ; i < 27 ; i++) {
-    			if (avatarVO.getPaiArray()[0][i] == 4 && avatarVO.getPaiArray()[1][i] != 2) {
+    			if (avatarVO.getPaiArray()[0][i] == 4 && avatarVO.getPaiArray()[1][i] < 2) {
     				//先判断所有4个的牌组中是否有未杠过的
     				gangIndex.add(i);
     				flag = true;
@@ -398,6 +409,11 @@ public class Avatar implements GameObj {
     	 * 这里检测吃的时候需要踢出掉碰 杠了的牌****
     	 */
     	int []  cardList = avatarVO.getPaiArray()[0];
+        for (int i = 0; i < cardList.length; i++) {
+            cardList[i] -= avatarVO.getPaiArray()[1][i] * 3;
+            cardList[i] -= avatarVO.getPaiArray()[4][i];
+        }
+
     	if(cardIndex>=0  && cardIndex <=8){
     		if(cardIndex == 0 && cardList[1] >=1 && cardList[2] >=1 ){
     			flag = true;
@@ -473,12 +489,13 @@ public class Avatar implements GameObj {
 
     /**
      * 为自己的牌组里加入新牌
-     * /碰 1  杠2  胡3  吃4
+     * /碰 1  杠2  胡3  吃4 手牌 5
      * @param cardIndex
      */
     public boolean putCardInList(int cardIndex){
         if(avatarVO.getPaiArray()[0][cardIndex]<4) {
             avatarVO.getPaiArray()[0][cardIndex]++;
+//            avatarVO.getPaiArray()[5][cardIndex]++;
            return true;
         }else{
         	//再没检测出为什么牌组里面已经有4张牌的错误消息前暂且注释掉
@@ -516,6 +533,17 @@ public class Avatar implements GameObj {
             }
             System.out.println("Error : pullCardFormList --> 牌数组里没有这张牌");
         */}
+
+//        if(avatarVO.getPaiArray()[5][cardIndex]>0) {
+//            avatarVO.getPaiArray()[5][cardIndex]--;
+//        }else{/*
+//            try {
+//                session.sendMsg(new ErrorResponse(ErrorCode.Error_000007));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println("Error : pullCardFormList --> 牌数组里没有这张牌");
+//        */}
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.dyz.persist.util;
 
+import com.dyz.gameserver.pojo.PaiVO;
+
 /**
  * Created by kevin on 2016/7/30.
  */
@@ -21,24 +23,109 @@ public class NormalHuPai {
     	System.out.println(flag);
     }
 
-    public boolean checkGDhu(int[][] paiList){
-        JIANG = 0;
+    public int checkGDhu(int[][] paiList){
         int[] pai =GlobalUtil.CloneIntList(paiList[0]);
-        for(int i=0;i<paiList[0].length;i++){
-            if(paiList[1][i] == 1 && pai[i] >= 3) {
-                pai[i] -= 3;
-            }else if(paiList[1][i] == 2 && pai[i] == 4){
-                pai[i]  -= 4;
-            }else if(paiList[1][i] == 4){
-                pai[i] -= 1;
+//        for(int i=0;i<paiList[0].length;i++){
+//            if(paiList[1][i] == 1 && pai[i] >= 3) {
+//                pai[i] -= 3;
+//            }else if(paiList[1][i] == 2 && pai[i] == 4){
+//                pai[i]  -= 4;
+//            }else if(paiList[1][i] == 4){
+//                pai[i] -= 1;
+//            }
+//        }
+
+        // 碰了多少组
+        int hasPengZuCount = 0;
+        for (int i = 0; i < paiList[0].length; i++) {
+            if (paiList[1][i] > 0) {
+                hasPengZuCount += paiList[1][i];
             }
         }
-        return isHSHuPai(pai);
 
+        // 杠了多少组
+        int hasGangZuCount = 0;
+        for (int i = 0; i < paiList[0].length; i++) {
+            if (paiList[2][i] > 0) {
+                hasGangZuCount += paiList[2][i];
+            }
+        }
+
+        // 吃了多少组
+        int hasChiZuCount = 0;
+        for (int i = 0; i < paiList[4].length; i++) {
+            if (paiList[4][i] > 0) {
+                hasGangZuCount += paiList[4][i];
+            }
+        }
+        hasGangZuCount /= 3;
+
+        PaiVO paivo = new PaiVO(pai, hasPengZuCount, hasGangZuCount, hasChiZuCount);
+        // 先判断是否特殊牌型
+        if (HuPaiType.getInstance().checkSSY(paivo) || HuPaiType.getInstance().checkJLBD(paivo)){
+            return 6;
+        }
+
+        // 判断是否一般牌型胡 AAA AAA AAA AAA AA
+        if (isZZHuPai(pai)) {
+            return checkGDHuType(paivo);
+        }
+        return -1;
+    }
+
+    public int checkGDHuType(PaiVO paivo) {
+        if (HuPaiType.getInstance().checkDSX(paivo)) {
+            return 6;
+        }
+
+        if (HuPaiType.getInstance().checkDSY(paivo)) {
+            return 6;
+        }
+
+        if (HuPaiType.getInstance().checkQYJ(paivo)) {
+            return 6;
+        }
+
+        if (HuPaiType.getInstance().checkZYS(paivo)) {
+            return 6;
+        }
+
+        if (HuPaiType.getInstance().checkXSX(paivo)) {
+            return 5;
+        }
+
+        if (HuPaiType.getInstance().checkXSY(paivo)) {
+            return 5;
+        }
+
+        if (HuPaiType.getInstance().checkHYJ(paivo)) {
+            return 5;
+        }
+
+        if (HuPaiType.getInstance().checkQP(paivo)) {
+            return 5;
+        }
+
+        if (HuPaiType.getInstance().checkHP(paivo)) {
+            return 4;
+        }
+
+        if (HuPaiType.getInstance().checkQYS(paivo)) {
+            return 4;
+        }
+
+        if (HuPaiType.getInstance().checkHYS(paivo)) {
+            return 2;
+        }
+
+        if (HuPaiType.getInstance().checkPPH(paivo)) {
+            return 2;
+        }
+
+        return 0;
     }
 
 
-    
     /**
      * 判断转转麻将普通胡牌
      * @param paiList

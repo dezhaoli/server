@@ -55,7 +55,7 @@ public class AvatarVO {
     private int huType = 0;
     /**
      * 牌数组
-     * /碰 1  杠2  胡3  吃4
+     * /所有牌 0 碰 1  杠2  胡3  吃4 手牌 5
      */
     private int[][] paiArray;
     /**
