@@ -243,7 +243,7 @@ public class PlayCardsLogic {
 		}
 
 		for(int i=0;i<playerList.size();i++){
-			playerList.get(i).avatarVO.setPaiArray(new int[6][paiCount]);
+			playerList.get(i).avatarVO.setPaiArray(new int[5][paiCount]);
 		}
 		//洗牌
 		shuffleTheCards();
