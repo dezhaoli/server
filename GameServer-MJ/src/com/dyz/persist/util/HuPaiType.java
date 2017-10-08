@@ -786,8 +786,8 @@ public class HuPaiType {
 	}
 
 	// 判断是否碰碰胡
-	public boolean checkPPH(PaiVO paivo) {
-		if (paivo.getChis() > 0) {
+	public boolean checkPPH(PaiVO paivo, int shunzi) {
+		if (shunzi > 0) {
 			return false;
 		}
 
@@ -800,8 +800,8 @@ public class HuPaiType {
 	}
 
 	// 判断是否混碰
-	public boolean checkHP(PaiVO paivo) {
-		if (checkHYS(paivo) && checkPPH(paivo)) {
+	public boolean checkHP(PaiVO paivo, int shunzi) {
+		if (checkHYS(paivo) && checkPPH(paivo, shunzi)) {
 			return true;
 		}
 
@@ -809,8 +809,8 @@ public class HuPaiType {
 	}
 
 	// 判断是否清碰
-	public boolean checkQP(PaiVO paivo) {
-		if (checkQYS(paivo) && checkPPH(paivo)) {
+	public boolean checkQP(PaiVO paivo, int shunzi) {
+		if (checkQYS(paivo) && checkPPH(paivo, shunzi)) {
 			return true;
 		}
 
@@ -818,9 +818,9 @@ public class HuPaiType {
 	}
 
 	// 判断是否平胡
-	public boolean checkPH(PaiVO paivo) {
+	public boolean checkPH(PaiVO paivo, int kezi) {
 		// 有碰和杠都不是平湖
-		if (paivo.getPengs() > 0 || paivo.getGangs() > 0) {
+		if (kezi > 0) {
 			return false;
 		}
 

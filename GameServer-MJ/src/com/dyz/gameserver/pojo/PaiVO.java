@@ -96,26 +96,7 @@ public class PaiVO {
 
     private int pais[];
 
-    public int getPengs() {
-        return pengs;
-    }
-
-    public int getGangs() {
-        return gangs;
-    }
-
-    public int getChis() {
-        return chis;
-    }
-
-    private int pengs;
-    private int gangs;
-    private int chis;
-
-    public PaiVO(int[] pai, int pengZuCount, int gangZuCount, int chiZuCount) {
+    public PaiVO(int[] pai) {
         pais = pai;
-        pengs = pengZuCount;
-        gangs = gangZuCount;
-        chis = chiZuCount;
     }
 }
