@@ -2251,6 +2251,11 @@ public class PlayCardsLogic {
     			//system.out.println("点杠");
     		}
     	}
+    	if (chiAvatar.contains(avatar)) {
+			sb.append("chi,");
+			json.put("curAvatarIndex", curAvatarIndex);//当前出牌人的索引
+			json.put("putOffCardPoint", putOffCardPoint);//当前出的牌的点数
+		}
     	if(sb.length()>1){
 			////system.out.println(sb);
 			//该自己杠/胡/碰
