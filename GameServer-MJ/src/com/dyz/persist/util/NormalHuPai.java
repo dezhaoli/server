@@ -15,15 +15,16 @@ public class NormalHuPai {
     
     
     public static void main(String[] args){
-    	int[] pai = new int[]{1,2,3, 4,5,6 ,6,7,8, 9, 10, 11, 31, 31};
+        int [] pai = new int[]{0,0,0,0,0,0,1,1,1,     0,0,2,0,3,1,1,1,0,     0,0,1,1,1,0,0,0,0,   0,0,0,0,0,0,0};
 
-    	//int [] pai = new int[]{0,0,0,0,0,0,1,1,1,     0,0,2,0,3,1,1,1,0,     0,0,1,1,1,0,0,0,0,   0,0,0,0,0,0,0};
+        System.out.println(GlobalUtil.PrintPaiList(pai));
+
     	NormalHuPai normalHuPai = new NormalHuPai();
-    	boolean flag = normalHuPai.isHSHuPai(pai);
+    	boolean flag = normalHuPai.isJPHPai(pai);
     	System.out.println(flag);
     }
 
-    public int checkGDhu(int[][] paiList){
+    public int checkGDhu(int[][] paiList, int hasPengZuCount, int hasGangZuCount, int hasChiZuCount){
         int[] pai =GlobalUtil.CloneIntList(paiList[0]);
 //        for(int i=0;i<paiList[0].length;i++){
 //            if(paiList[1][i] == 1 && pai[i] >= 3) {
@@ -35,31 +36,6 @@ public class NormalHuPai {
 //            }
 //        }
 
-        // 碰了多少组
-        int hasPengZuCount = 0;
-        for (int i = 0; i < paiList[0].length; i++) {
-            if (paiList[1][i] > 0) {
-                hasPengZuCount += paiList[1][i];
-            }
-        }
-
-        // 杠了多少组
-        int hasGangZuCount = 0;
-        for (int i = 0; i < paiList[0].length; i++) {
-            if (paiList[2][i] > 0) {
-                hasGangZuCount += paiList[2][i];
-            }
-        }
-
-        // 吃了多少组
-        int hasChiZuCount = 0;
-        for (int i = 0; i < paiList[4].length; i++) {
-            if (paiList[4][i] > 0) {
-                hasGangZuCount += paiList[4][i];
-            }
-        }
-        hasGangZuCount /= 3;
-
         PaiVO paivo = new PaiVO(pai, hasPengZuCount, hasGangZuCount, hasChiZuCount);
         // 先判断是否特殊牌型
         if (HuPaiType.getInstance().checkSSY(paivo) || HuPaiType.getInstance().checkJLBD(paivo)){
@@ -68,7 +44,9 @@ public class NormalHuPai {
 
         // 判断是否一般牌型胡 AAA AAA AAA AAA AA
         if (isZZHuPai(pai)) {
-            return checkGDHuType(paivo);
+            int[] pai1 =GlobalUtil.CloneIntList(paiList[0]);
+            PaiVO paivo1 = new PaiVO(pai1, hasPengZuCount, hasGangZuCount, hasChiZuCount);
+            return checkGDHuType(paivo1);
         }
         return -1;
     }
@@ -205,6 +183,72 @@ public class NormalHuPai {
         }
         
     }
+
+    /**
+     * 鸡平麻将普通胡牌算法
+     * @param paiList
+     * @return
+     */
+    public boolean isJPHPai(int[] paiList) {
+
+        if (Remain(paiList) == 0) {
+            return true;           //   递归退出条件：如果没有剩牌，则胡牌返回。
+        }
+        for (int i = 0;  i < paiList.length; i++) {//   找到有牌的地方，i就是当前牌,   PAI[i]是个数
+                //   2张组合(将牌)
+            if (JIANG ==0 && paiList[i] >= 2)           //   如果之前没有将牌，且当前牌不少于2张
+            {
+                JIANG = 1;                                       //   设置将牌标志
+                paiList[i] -= 2;                                   //   减去2张牌
+                if (isZZHuPai(paiList)) return true;             //   如果剩余的牌组合成功，胡牌
+                paiList[i] += 2;                                   //   取消2张组合
+                JIANG = 0;                                       //   清除将牌标志
+            }
+            if   ( i> 27){
+                return   false;               //   “东南西北中发白”没有顺牌组合，不胡
+            }
+            //   顺牌组合，注意是从前往后组合！
+            //   排除数值为8和9的牌å
+            if (i %9!=7 && i%9 != 8 && paiList[i+1]!=0 && paiList[i+2]!=0)             //   如果后面有连续两张牌
+            {
+                paiList[i]--;
+                paiList[i + 1]--;
+                paiList[i + 2]--;                                     //   各牌数减1
+                if (isZZHuPai(paiList)) {
+                    return true;             //   如果剩余的牌组合成功，胡牌
+                }
+                paiList[i]++;
+                paiList[i + 1]++;
+                paiList[i + 2]++;                                     //   恢复各牌数
+            }
+            //   跟踪信息
+            //   4张组合(杠子)
+            if(paiList[i] != 0){
+                if (paiList[i] == 4)                               //   如果当前牌数等于4张
+                {
+                    paiList[i] = 0;                                     //   除开全部4张牌
+                    if (isZZHuPai(paiList)) {
+                        return true;             //   如果剩余的牌组合成功，和牌
+                    }
+                    paiList[i] = 4;                                     //   否则，取消4张组合
+                }
+                //   3张组合(大对)
+                if (paiList[i] >= 3)                               //   如果当前牌不少于3张
+                {
+                    paiList[i] -= 3;                                   //   减去3张牌
+                    if (isZZHuPai(paiList)) {
+                        return true;             //   如果剩余的牌组合成功，胡牌
+                    }
+                    paiList[i] += 3;                                   //   取消3张组合
+                }
+            }
+
+        }
+        //   无法全部组合，不胡！
+        return false;
+    }
+
+
     /**
      * 转转麻将普通胡牌算法
      * @param paiList

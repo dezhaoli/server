@@ -8,6 +8,7 @@ import com.dyz.gameserver.sprite.Character;
 import com.dyz.gameserver.sprite.base.GameObj;
 import com.dyz.gameserver.sprite.tool.AsyncTaskQueue;
 import com.dyz.myBatis.services.AccountService;
+import com.dyz.persist.util.GlobalData;
 import com.dyz.persist.util.GlobalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -222,7 +223,7 @@ public class Avatar implements GameObj {
             card_col = 34;
 
         }else if(roomVO.getRoomType() == 3){
-            card_col = 27;
+            card_col = 34;
         }
         cleanPaiData();
     }
@@ -234,11 +235,31 @@ public class Avatar implements GameObj {
         if(avatarVO.getPaiArray() == null) {
             avatarVO.setPaiArray(new int[card_row][card_col]);
         }
+
+        if(avatarVO.getChiArray() == null) {
+            avatarVO.setChiArray(new int[card_col]);
+        }
+
+        if(avatarVO.getPengArray() == null) {
+            avatarVO.setPengArray(new int[card_col]);
+        }
+
+        if(avatarVO.getGangArray() == null) {
+            avatarVO.setGangArray(new int[card_col]);
+        }
+
         for(int i=0;i<card_row;i++){
             for(int k=0;k<card_col;k++){
                 avatarVO.getPaiArray()[i][k] = 0;
             }
         }
+
+        for (int i = 0; i < card_col; i++) {
+            avatarVO.getChiArray()[i] = 0;
+            avatarVO.getPengArray()[i] = 0;
+            avatarVO.getGangArray()[i] = 0;
+        }
+
     }
 
     /**
@@ -251,10 +272,9 @@ public class Avatar implements GameObj {
 //    	System.out.println("碰了的牌="+cardIndex+"====="+resultRelation.get(1));
     	boolean flag = false;
 
-        int []  cardList = avatarVO.getPaiArray()[0];
+        int []  cardList = GlobalUtil.CloneIntList(avatarVO.getPaiArray()[0]);
         for (int i = 0; i < cardList.length; i++) {
-            cardList[i] -= avatarVO.getPaiArray()[1][i] * 3;
-            cardList[i] -= avatarVO.getPaiArray()[4][i];
+            cardList[i] = cardList[i] - avatarVO.getChiArray()[i] - avatarVO.getPengArray()[i] * 3 - avatarVO.getGangArray()[i] * 4;
         }
 
         if (cardList[cardIndex] >= 2) {
@@ -321,11 +341,17 @@ public class Avatar implements GameObj {
      	//system.out.println("碰了的牌==杠家id"+avatarVO.getAccount().getUuid()+"===="+resultRelation.get(1));
     	gangIndex.clear();//先清除缓存里面的可以杠的牌下标
     	//剔除掉当前以前吃，碰，杠的牌组 再进行比较
+        int []  cardList = GlobalUtil.CloneIntList(avatarVO.getPaiArray()[0]);
+        for (int i = 0; i < cardList.length; i++) {
+            cardList[i] -= avatarVO.getChiArray()[i];
+            cardList[i] -= avatarVO.getGangArray()[i] * 4;
+        }
+
     	boolean flag = false;
     	if(!roomVO.isAddWordCard()){
     		//划水麻将没有风牌  就27
     		for (int i= 0 ; i < 27 ; i++) {
-    			if (avatarVO.getPaiArray()[0][i] == 4 && avatarVO.getPaiArray()[1][i] < 2) {
+    			if (cardList[i]  == 4) {
     				//先判断所有4个的牌组中是否有未杠过的
     				gangIndex.add(i);
     				flag = true;
@@ -408,10 +434,9 @@ public class Avatar implements GameObj {
     	/**
     	 * 这里检测吃的时候需要踢出掉碰 杠了的牌****
     	 */
-    	int []  cardList = avatarVO.getPaiArray()[0];
+    	int []  cardList = GlobalUtil.CloneIntList(avatarVO.getPaiArray()[0]);
         for (int i = 0; i < cardList.length; i++) {
-            cardList[i] -= avatarVO.getPaiArray()[1][i] * 3;
-            cardList[i] -= avatarVO.getPaiArray()[4][i];
+           cardList[i] = cardList[i] - avatarVO.getChiArray()[i] - avatarVO.getPengArray()[i] * 3 - avatarVO.getGangArray()[i] * 4;
         }
 
     	if(cardIndex>=0  && cardIndex <=8){

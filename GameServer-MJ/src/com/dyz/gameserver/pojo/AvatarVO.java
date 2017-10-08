@@ -55,9 +55,54 @@ public class AvatarVO {
     private int huType = 0;
     /**
      * 牌数组
-     * /所有牌 0 碰 1  杠2  胡3  吃4
+     * /碰 1  杠2  胡3  吃4
      */
     private int[][] paiArray;
+
+    public int[] getChiArray() {
+        return chiArray;
+    }
+
+    public int[] getPengArray() {
+        return pengArray;
+    }
+
+    public int[] getGangArray() {
+        return gangArray;
+    }
+
+    public void setChiArray(int[] chiArray) {
+        this.chiArray = chiArray;
+    }
+
+    public void setPengArray(int[] pengArray) {
+        this.pengArray = pengArray;
+    }
+
+    public void setGangArray(int[] gangArray) {
+        this.gangArray = gangArray;
+    }
+
+    /**
+     * 吃牌组
+     */
+
+    private int[] chiArray;
+
+    /**
+     * 碰牌组
+     */
+
+    private int[] pengArray;
+
+
+    /**
+     * 杠牌组
+     */
+
+    private int[] gangArray;
+
+
     /**
      * 存储整局牌的 杠，胡以及得分情况的对象，游戏结束时直接返回对象
      */

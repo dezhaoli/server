@@ -96,10 +96,55 @@ public class HuPaiType {
 	public static void guangDong(Avatar avatarShu , Avatar avatar,  int cardIndex ,
 								 List<Avatar> playerList , int huCount){
 		int score = 0;
+		int fanshu = avatar.avatarVO.getHuType();
 		if(avatarShu.getUuId() == avatar.getUuId() ) {
 			//自摸类型
-		} else {
+			fanshu++;
+			score = (int)Math.pow(2.0, fanshu);
+			String str = "";
+			for (int i = 0; i < playerList.size(); i++) {
+				if(playerList.get(i).getUuId() == avatar.getUuId()){
+					str ="0:"+cardIndex+":"+Rule.Hu_zi_common;
+					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+					avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", score * 3);
+				}
+				else{
+					str =avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_other_common;
+					playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+					playerList.get(i).avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", -1 * score);
+				}
+			}
 
+		} else {
+			score = (int)Math.pow(2.0, fanshu);
+
+			if(huCount == 1){
+				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self;
+				//修改胡家自己的番数
+				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+
+				avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("2",1*score);
+				//修改点炮玩家的番
+				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
+				//存储hu的关系信息 胡玩家uuid：胡牌id：胡牌类型
+				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other;
+				//点炮信息放入放炮玩家信息中
+				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+			}
+			else{
+				//点炮  多响
+				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self;
+				//修改胡家自己的番数
+				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+				avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("2",1*score);
+				//修改点炮玩家的番数
+				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
+
+				//存储hu的关系信息 胡玩家uuid：胡牌id：胡牌类型
+				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other;
+				//点炮信息放入放炮玩家信息中
+				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+			}
 		}
 	}
 
@@ -772,4 +817,13 @@ public class HuPaiType {
 		return false;
 	}
 
+	// 判断是否平胡
+	public boolean checkPH(PaiVO paivo) {
+		// 有碰和杠都不是平湖
+		if (paivo.getPengs() > 0 || paivo.getGangs() > 0) {
+			return false;
+		}
+
+		return true;
+	}
 }

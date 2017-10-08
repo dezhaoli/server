@@ -2,14 +2,8 @@ package com.dyz.gameserver.logic;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -243,8 +237,24 @@ public class PlayCardsLogic {
 		}
 
 		for(int i=0;i<playerList.size();i++){
-			playerList.get(i).avatarVO.setPaiArray(new int[5][paiCount]);
+			playerList.get(i).avatarVO.setPaiArray(new int[2][paiCount]);
+			for (int j = 0; j < 2; j++) {
+				for (int k = 0; k < paiCount; k++) {
+					playerList.get(i).avatarVO.getPaiArray()[j][k] = 0;
+				}
+			}
+
+			playerList.get(i).avatarVO.setChiArray(new int[paiCount]);
+			playerList.get(i).avatarVO.setPengArray(new int[paiCount]);
+			playerList.get(i).avatarVO.setGangArray(new int[paiCount]);
+
+			for (int j = 0; j < paiCount; j++) {
+				playerList.get(i).avatarVO.getChiArray()[j] = 0;
+				playerList.get(i).avatarVO.getPengArray()[j] = 0;
+				playerList.get(i).avatarVO.getGangArray()[j] = 0;
+			}
 		}
+
 		//洗牌
 		shuffleTheCards();
 		//发牌
@@ -716,7 +726,9 @@ public class PlayCardsLogic {
 					avatar.setCardListStatus(cardIndex,4);
 
 					//把各个玩家吃的牌记录到缓存中去,牌的index
-					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", cardIndex+"");
+					String str = avatar.getUuId() + ":" + cardIndex + ":" + onePointIndex + ":" + twoPointIndex;
+					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
+
 
     				clearArrayAndSetQuest();
 
@@ -724,15 +736,23 @@ public class PlayCardsLogic {
     				for (int i = 0; i < playerList.size(); i++) {
     					if(avatar.getUuId() == playerList.get(i).getUuId()){
     						//*****吃牌后面弄，需要修改传入的参数 CardVO
-     						String str = "";
+
 							//avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", cardVo.getCardPoint()+"");
 //    						playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
     						//标记吃了的牌的下标//碰 1  杠2  胡3  吃4
 							//playerList.get(i).putResultRelation(1,cardIndex+"");
+							//playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
+    						playerList.get(i).avatarVO.getPaiArray()[1][cardIndex] |= 4 ;
+    						playerList.get(i).avatarVO.getPaiArray()[1][onePointIndex] |= 4;
+    						playerList.get(i).avatarVO.getPaiArray()[1][twoPointIndex]  |= 4;
 
-    						playerList.get(i).avatarVO.getPaiArray()[4][cardIndex] = 1 ;
-    						playerList.get(i).avatarVO.getPaiArray()[4][onePointIndex] = 1;
-    						playerList.get(i).avatarVO.getPaiArray()[4][twoPointIndex] = 1;
+							playerList.get(i).avatarVO.getChiArray()[cardIndex]++ ;
+							playerList.get(i).avatarVO.getChiArray()[onePointIndex]++;
+							playerList.get(i).avatarVO.getChiArray()[twoPointIndex]++;
+
+							avatar.getPaiArray()[1][cardIndex] |= 4 ;
+							avatar.getPaiArray()[1][onePointIndex] |= 4;
+							avatar.getPaiArray()[1][twoPointIndex]  |= 4;
     					}
 
 
@@ -810,8 +830,11 @@ public class PlayCardsLogic {
     					 if(playerList.get(i).getUuId() == avatar.getUuId()){
     						 //碰了的牌放入到avatar的resultRelation  Map中
     						 playerList.get(i).putResultRelation(1,cardIndex+"");
-    						 playerList.get(i).avatarVO.getPaiArray()[1][cardIndex]=1;
-    						 avatar.getPaiArray()[1][cardIndex] = 1;
+    						 playerList.get(i).avatarVO.getPaiArray()[1][cardIndex] |= 1;
+    						 avatar.getPaiArray()[1][cardIndex] |= 1;
+
+							 playerList.get(i).avatarVO.getPengArray()[cardIndex] = 1;
+
 							 // 手牌去掉碰掉的牌
 							 // playerList.get(i).avatarVO.getPaiArray()[5][cardIndex] -= 2;
 							 //avatar.getPaiArray()[5][cardIndex] = 1;
@@ -899,7 +922,8 @@ public class PlayCardsLogic {
     		    				 avatar.putResultRelation(2,cardPoint+"");
     		    				 avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
     		    				 avatar.getPaiArray()[1][cardPoint] = 2;
-    		    				 
+								 avatar.avatarVO.getGangArray()[cardPoint] = 1;
+
     		    				 avatar.setCardListStatus(cardPoint,2);//杠牌标记2
     							 if(roomVO.getRoomType() == 1){
     								 //转转麻将
@@ -936,6 +960,7 @@ public class PlayCardsLogic {
     	    				 avatar.putResultRelation(2,cardPoint+"");
     	    				 avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
     	    				 avatar.getPaiArray()[1][cardPoint] = 2;
+							 avatar.avatarVO.getGangArray()[cardPoint] = 1;
     	    				 
     	    				 avatar.setCardListStatus(cardPoint,2);//杠牌标记2
     						 //暗杠
@@ -987,6 +1012,7 @@ public class PlayCardsLogic {
         				 avatar.putResultRelation(2,cardPoint+"");
         				 avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
         				 avatar.getPaiArray()[1][cardPoint] = 2;
+						 avatar.avatarVO.getGangArray()[cardPoint] = 1;
         				 
         				 avatar.setCardListStatus(cardPoint,2);//杠牌标记2
     					 //点杠(分在明杠里面)（划水麻将里面的放杠）
@@ -1896,10 +1922,24 @@ public class PlayCardsLogic {
 	 */
     public boolean checkHuGuangDong(Avatar avatar, Integer cardIndex){
 		int [][] paiList =  avatar.getPaiArray();
-		NormalHuPai normalHuPai = new NormalHuPai();
-		int flag = normalHuPai.checkGDhu(paiList);
 
-		if (flag > 0) {
+		// 碰了多少组
+		int hasPengZuCount = 0;
+		// 杠了多少组
+		int hasGangZuCount = 0;
+		// 吃了多少组
+		int hasChiZuCount = 0;
+		for (int i = 0; i < paiList[0].length; i++) {
+			hasPengZuCount += avatar.avatarVO.getPengArray()[i];
+			hasGangZuCount += avatar.avatarVO.getGangArray()[i];
+			hasChiZuCount += avatar.avatarVO.getChiArray()[i];
+		}
+		hasChiZuCount /= 3;
+
+		NormalHuPai normalHuPai = new NormalHuPai();
+		int flag = normalHuPai.checkGDhu(paiList, hasPengZuCount, hasGangZuCount, hasChiZuCount);
+
+		if (flag >= 0) {
 			avatar.avatarVO.setHuType(flag);
 			return true;
 		} else {

@@ -53,9 +53,9 @@ public class HuReturnObjectVO {
 	 * @param str   信息内容
 	 */
 	public synchronized void updateTotalInfo(String type ,String str) {
-		if(type.equals("chi")){
-			System.out.println("chi");
-		}
+//		if(type.equals("chi")){
+//			System.out.println("chi");
+//		}
 		if(StringUtil.isNotEmpty(str)){
 			if(totalInfo.get(type) == null){
 				totalInfo.put(type, str);
