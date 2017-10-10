@@ -1923,23 +1923,11 @@ public class PlayCardsLogic {
     public boolean checkHuGuangDong(Avatar avatar, Integer cardIndex){
 		int [][] paiList =  avatar.getPaiArray();
 
-		// 碰了多少组
-		int hasPengZuCount = 0;
-		// 杠了多少组
-		int hasGangZuCount = 0;
-		// 吃了多少组
-		int hasChiZuCount = 0;
-		for (int i = 0; i < paiList[0].length; i++) {
-			hasPengZuCount += avatar.avatarVO.getPengArray()[i];
-			hasGangZuCount += avatar.avatarVO.getGangArray()[i];
-			hasChiZuCount += avatar.avatarVO.getChiArray()[i];
-		}
-		hasChiZuCount /= 3;
-
 		NormalHuPai normalHuPai = new NormalHuPai();
-		int flag = normalHuPai.checkGDhu(paiList, hasPengZuCount, hasGangZuCount, hasChiZuCount);
+		int flag = normalHuPai.checkGDhu(paiList, avatar.avatarVO.getPengArray(),
+				avatar.avatarVO.getGangArray(), avatar.avatarVO.getChiArray());
 
-		if (flag >= 0) {
+		if (flag > 0) {
 			avatar.avatarVO.setHuType(flag);
 			return true;
 		} else {

@@ -96,7 +96,28 @@ public class HuPaiType {
 	public static void guangDong(Avatar avatarShu , Avatar avatar,  int cardIndex ,
 								 List<Avatar> playerList , int huCount){
 		int score = 0;
-		int fanshu = avatar.avatarVO.getHuType();
+		int huType = avatar.avatarVO.getHuType();
+		int fanshu = 0;
+		switch (huType){
+			case Rule.JH: fanshu = 0; break;
+			case Rule.PH: fanshu = 1; break;
+			case Rule.PPH: fanshu = 2; break;
+			case Rule.HYS: fanshu = 2; break;
+			case Rule.QYS: fanshu = 4; break;
+			case Rule.HP: fanshu = 4; break;
+			case Rule.QP: fanshu = 5; break;
+			case Rule.HYJ: fanshu = 5; break;
+			case Rule.XSY: fanshu = 5; break;
+			case Rule.XSX: fanshu = 5; break;
+			case Rule.ZYS: fanshu = 6; break;
+			case Rule.QYJ: fanshu = 6; break;
+			case Rule.DSY: fanshu = 6; break;
+			case Rule.DSX: fanshu = 6; break;
+			case Rule.JLBD: fanshu = 6; break;
+			case Rule.SSY: fanshu = 6; break;
+
+		}
+
 		if(avatarShu.getUuId() == avatar.getUuId() ) {
 			//自摸类型
 			fanshu++;
@@ -104,12 +125,12 @@ public class HuPaiType {
 			String str = "";
 			for (int i = 0; i < playerList.size(); i++) {
 				if(playerList.get(i).getUuId() == avatar.getUuId()){
-					str ="0:"+cardIndex+":"+Rule.Hu_zi_common;
+					str ="0:"+cardIndex+":"+Rule.Hu_zi_common+":"+huType;
 					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 					avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", score * 3);
 				}
 				else{
-					str =avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_other_common;
+					str =avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_other_common+":"+huType;
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", -1 * score);
 				}
@@ -119,7 +140,7 @@ public class HuPaiType {
 			score = (int)Math.pow(2.0, fanshu);
 
 			if(huCount == 1){
-				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self;
+				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self+":"+huType;
 				//修改胡家自己的番数
 				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 
@@ -127,13 +148,13 @@ public class HuPaiType {
 				//修改点炮玩家的番
 				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
 				//存储hu的关系信息 胡玩家uuid：胡牌id：胡牌类型
-				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other;
+				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 			}
 			else{
 				//点炮  多响
-				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self;
+				String str =avatarShu.getUuId()+":"+cardIndex+":"+Rule.Hu_d_self+":"+huType;
 				//修改胡家自己的番数
 				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 				avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("2",1*score);
@@ -141,7 +162,7 @@ public class HuPaiType {
 				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
 
 				//存储hu的关系信息 胡玩家uuid：胡牌id：胡牌类型
-				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other;
+				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 			}

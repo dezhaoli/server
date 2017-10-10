@@ -1,5 +1,6 @@
 package com.dyz.persist.util;
 
+import com.context.Rule;
 import com.dyz.gameserver.pojo.HupaiVO;
 import com.dyz.gameserver.pojo.PaiVO;
 
@@ -14,57 +15,61 @@ public class NormalHuPai {
     private int JIANG = 0;
 
     public static void main(String[] args){
-        int [] pai = new int[]{0,0,0,0,0,3,3,3,0,     1,1,1,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   2,0,0,0,0,0,0};
-        int [] pai1 = GlobalUtil.CloneIntList(pai);
-        int[] pai2 =GlobalUtil.CloneIntList(pai);
+        int[][] paiList = new int[][]{{0,0,1,1,1,0,1,1,1,     0,0,0,0,0,1,1,3,0,     0,0,0,0,0,0,3,0,0,   0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0}};
 
-        System.out.println(GlobalUtil.PrintPaiList(pai));
+        int[] peng = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] gang = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] chi = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
 
-        NormalHuPai hupai = new NormalHuPai();
-        HupaiVO hupaivo_shun = new HupaiVO();
-        boolean hu = hupai.isJPHPai_shun(pai1, hupaivo_shun);
-
-        hupai.JIANG = 0;
-        HupaiVO hupaivo_ke = new HupaiVO();
-        boolean hu1 = hupai.isJPHPai_ke(pai2, hupaivo_ke);
-
-        if (hu) {
-            PaiVO paivo1 = new PaiVO(pai);
-            int shunzi_shun = 0 + hupaivo_shun.shunzi;
-            int kezi_shun = 0 + 0 + hupaivo_shun.kezi;
-            int shunzi_ke = 0 + hupaivo_ke.shunzi;
-            int kezi_ke = 0 + 0 + hupaivo_ke.kezi;
-            System.out.println(shunzi_shun + " " + kezi_shun + " " + shunzi_ke + "" + kezi_ke);
-            System.out.println(hupai.checkGDHuType(paivo1, shunzi_shun, kezi_shun, shunzi_ke, kezi_ke));
-        }
-
-
-//        HupaiVO hupaivo = new HupaiVO();
-//    	NormalHuPai normalHuPai = new NormalHuPai();
-//    	boolean flag = normalHuPai.isJPHPai(pai, hupaivo);
-//    	System.out.println(flag + " " +hupaivo.kezi + " " + hupaivo.shunzi);
+        NormalHuPai pai = new NormalHuPai();
+        System.out.println(pai.checkGDhu(paiList, peng, gang, chi));
     }
 
-    public int checkGDhu(int[][] paiList, int hasPengZuCount, int hasGangZuCount, int hasChiZuCount){
-        PaiVO paivo = new PaiVO(paiList[0]);
+    public int checkGDhu(int[][] paiList, int[] peng, int[] gang, int[] chi){
+        // 碰了多少组
+        int hasPengZuCount = 0;
+        // 杠了多少组
+        int hasGangZuCount = 0;
+        // 吃了多少组
+        int hasChiZuCount = 0;
+        for (int i = 0; i < paiList[0].length; i++) {
+            hasPengZuCount += peng[i];
+            hasGangZuCount += gang[i];
+            hasChiZuCount += chi[i];
+        }
+
+        hasChiZuCount /= 3;
+        int[] org = GlobalUtil.CloneIntList(paiList[0]);
+        PaiVO paivo = new PaiVO(org);
         // 先判断是否特殊牌型
-        if (HuPaiType.getInstance().checkSSY(paivo) || HuPaiType.getInstance().checkJLBD(paivo)){
-            return 6;
+        if (HuPaiType.getInstance().checkSSY(paivo)){
+            return Rule.SSY;
+        }
+
+        if (HuPaiType.getInstance().checkJLBD(paivo)){
+            return Rule.JLBD;
+        }
+
+        for (int i = 0; i < org.length; ++i) {
+            org[i] -= peng[i] * 3;
+            org[i] -= gang[i] * 4;
+            org[i] -= chi[i];
         }
 
         // 判断是否一般牌型胡 AAA AAA AAA AAA AA
-        int[] pai =GlobalUtil.CloneIntList(paiList[0]);
+        int[] pai =GlobalUtil.CloneIntList(org);
         HupaiVO hupaivo_shun = new HupaiVO(); // 顺子优先，看看看多少顺子和刻子
         boolean hu = isJPHPai_shun(pai, hupaivo_shun);
 
         JIANG = 0;
-        int[] pai1 =GlobalUtil.CloneIntList(paiList[0]);
+        int[] pai1 =GlobalUtil.CloneIntList(org);
         HupaiVO hupaivo_ke = new HupaiVO(); // 刻子优先，看看看多少顺子和刻子
         boolean hu1 = isJPHPai_ke(pai1, hupaivo_ke);
 
         if (hu) {
             //int[] pai2 =GlobalUtil.CloneIntList(paiList[0]);
-            PaiVO paivo1 = new PaiVO(paiList[0]);
+            PaiVO paivo1 = new PaiVO(org);
             int shunzi_shun = hasChiZuCount + hupaivo_shun.shunzi;
             int kezi_shun = hasPengZuCount + hasGangZuCount + hupaivo_shun.kezi;
             int shunzi_ke = hasChiZuCount + hupaivo_ke.shunzi;
@@ -72,7 +77,7 @@ public class NormalHuPai {
 
             return checkGDHuType(paivo1, shunzi_shun, kezi_shun, shunzi_ke, kezi_ke);
         }
-        return -1;
+        return 0;
     }
 
     /**
@@ -86,58 +91,58 @@ public class NormalHuPai {
      */
     public int checkGDHuType(PaiVO paivo, int shunzi_shun, int kezi_shun, int shunzi_ke, int kezi_ke) {
         if (HuPaiType.getInstance().checkDSX(paivo)) {
-            return 6;
+            return Rule.DSX;
         }
 
         if (HuPaiType.getInstance().checkDSY(paivo)) {
-            return 6;
+            return Rule.DSY;
         }
 
         if (HuPaiType.getInstance().checkQYJ(paivo)) {
-            return 6;
+            return Rule.QYJ;
         }
 
         if (HuPaiType.getInstance().checkZYS(paivo)) {
-            return 6;
+            return Rule.ZYS;
         }
 
         if (HuPaiType.getInstance().checkXSX(paivo)) {
-            return 5;
+            return Rule.XSX;
         }
 
         if (HuPaiType.getInstance().checkXSY(paivo)) {
-            return 5;
+            return Rule.XSY;
         }
 
         if (HuPaiType.getInstance().checkHYJ(paivo)) {
-            return 5;
+            return Rule.HYJ;
         }
 
         if (HuPaiType.getInstance().checkQP(paivo, shunzi_ke)) {
-            return 5;
+            return Rule.QP;
         }
 
         if (HuPaiType.getInstance().checkHP(paivo, shunzi_ke)) {
-            return 4;
+            return Rule.HP;
         }
 
         if (HuPaiType.getInstance().checkQYS(paivo)) {
-            return 4;
+            return Rule.QYS;
         }
 
         if (HuPaiType.getInstance().checkHYS(paivo)) {
-            return 2;
+            return Rule.HYS;
         }
 
         if (HuPaiType.getInstance().checkPPH(paivo, shunzi_ke)) {
-            return 2;
+            return Rule.PPH;
         }
 
         if (HuPaiType.getInstance().checkPH(paivo, kezi_shun)) {
-            return 1;
+            return Rule.PH;
         }
 
-        return 0;
+        return Rule.JH;
     }
 
 
@@ -306,12 +311,10 @@ public class NormalHuPai {
                 paiList[i] += 2;                                   //   取消2张组合
                 JIANG = 0;                                       //   清除将牌标志
             }
-            if   ( i> 27){
-                return   false;               //   “东南西北中发白”没有顺牌组合，不胡
-            }
+
             //   顺牌组合，注意是从前往后组合！
             //   排除数值为8和9的牌å
-            if (i %9!=7 && i%9 != 8 && paiList[i] != 0 && paiList[i+1]!=0 && paiList[i+2]!=0)             //   如果后面有连续两张牌
+            if (i < 27 && i %9!=7 && i%9 != 8 && paiList[i] != 0 && paiList[i+1]!=0 && paiList[i+2]!=0)             //   如果后面有连续两张牌
             {
                 paiList[i]--;
                 paiList[i + 1]--;

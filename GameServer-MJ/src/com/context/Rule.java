@@ -46,6 +46,24 @@ public class Rule {
     //划水麻将
     public static String Gang_ming_guolu = "gang_guolu";//过路杠
     public static String Gang_fang = "fanggang";//放杠
+
+    // 鸡平胡
+    public static final int JH = 1;
+    public static final int PH = 2;
+    public static final int PPH = 3;
+    public static final int HYS = 4;
+    public static final int QYS = 5;
+    public static final int HP = 6;
+    public static final int QP = 7;
+    public static final int HYJ = 8;
+    public static final int XSY = 9;
+    public static final int XSX = 10;
+    public static final int ZYS = 11;
+    public static final int QYJ = 12;
+    public static final int DSY = 13;
+    public static final int DSX = 14;
+    public static final int JLBD = 15;
+    public static final int SSY = 16;
     
 }
 
