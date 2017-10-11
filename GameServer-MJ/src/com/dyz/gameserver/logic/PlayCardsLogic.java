@@ -1073,7 +1073,7 @@ public class PlayCardsLogic {
     						 }
     						 else{
     							 //杠牌返回给其他人只返回杠的类型和杠牌的玩家位置
-    							 playerList.get(i).getSession().sendMsg(new GangResponse(1, 1, 1,type));
+    							 playerList.get(i).getSession().sendMsg(new GangResponse(1, cardPoint,avatarIndex,type));
 //    							 responseMsg = new GangResponse(1, 1, 1,type);
 //    							 lastAvtar = playerList.get(i);
     						 }
@@ -1093,7 +1093,7 @@ public class PlayCardsLogic {
     						 }
     						 else{
     							 //杠牌返回给其他人只返回杠的类型和杠牌的玩家位置
-    							 playerList.get(i).getSession().sendMsg(new GangResponse(1, 1, 1,type));
+    							 playerList.get(i).getSession().sendMsg(new GangResponse(1, cardPoint,avatarIndex,type));
 //    							 responseMsg = new GangResponse(1, 1, 1,type);
 //    							 lastAvtar = playerList.get(i);
     						 }
