@@ -710,68 +710,70 @@ public class PlayCardsLogic {
 			System.out.println("传入错误的牌:传入的牌"+cardIndex+"---上一把出牌："+putOffCardPoint);
 		}
 
-    	if(roomVO.getRoomType() == 3){
-    		if(huAvatar.size() == 0 && penAvatar.size() == 0 && gangAvatar.size() == 0 && chiAvatar.size() > 0) {
-    			if(chiAvatar.contains(avatar)){
+    	if(roomVO.getRoomType() == 3) {
+			// 吃的条件要么没有人胡，要么胡的人也是自己；要么没有碰，要么碰的人是自己
+			if (chiAvatar.size() > 0 && (huAvatar.size() == 0 || (huAvatar.contains(avatar) && huAvatar.size() == 1))
+					&& (penAvatar.size() == 0 || (penAvatar.size() == 1 && penAvatar.contains(avatar)))) {
+				if (chiAvatar.contains(avatar)) {
 					avatar.avatarVO.setHasMopaiChupai(true);
-    				//回放记录
-    	        	PlayRecordOperation(playerList.indexOf(avatar),cardIndex,3,-1, null,null);
+					//回放记录
+					PlayRecordOperation(playerList.indexOf(avatar), cardIndex, 3, -1, null, null);
 
 					//把出的牌从出牌玩家的chupais中移除掉
 					playerList.get(curAvatarIndex).avatarVO.removeLastChupais();
 					chiAvatar.remove(avatar);
 
-    				//更新牌组
-    				avatar.putCardInList(cardIndex);
-					avatar.setCardListStatus(cardIndex,4);
+					//更新牌组
+					avatar.putCardInList(cardIndex);
+					avatar.setCardListStatus(cardIndex, 4);
 
 					//把各个玩家吃的牌记录到缓存中去,牌的index
 					String str = avatar.getUuId() + ":" + cardIndex + ":" + onePointIndex + ":" + twoPointIndex;
 					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
 
 
-    				clearArrayAndSetQuest();
+					clearArrayAndSetQuest();
 
-    				flag = true;
-    				for (int i = 0; i < playerList.size(); i++) {
-    					if(avatar.getUuId() == playerList.get(i).getUuId()){
-    						//*****吃牌后面弄，需要修改传入的参数 CardVO
+					flag = true;
+					for (int i = 0; i < playerList.size(); i++) {
+						if (avatar.getUuId() == playerList.get(i).getUuId()) {
+							//*****吃牌后面弄，需要修改传入的参数 CardVO
 
 							//avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", cardVo.getCardPoint()+"");
 //    						playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
-    						//标记吃了的牌的下标//碰 1  杠2  胡3  吃4
+							//标记吃了的牌的下标//碰 1  杠2  胡3  吃4
 							//playerList.get(i).putResultRelation(1,cardIndex+"");
 							//playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("chi", str);
-    						playerList.get(i).avatarVO.getPaiArray()[1][cardIndex] |= 4 ;
-    						playerList.get(i).avatarVO.getPaiArray()[1][onePointIndex] |= 4;
-    						playerList.get(i).avatarVO.getPaiArray()[1][twoPointIndex]  |= 4;
+							playerList.get(i).avatarVO.getPaiArray()[1][cardIndex] |= 4;
+							playerList.get(i).avatarVO.getPaiArray()[1][onePointIndex] |= 4;
+							playerList.get(i).avatarVO.getPaiArray()[1][twoPointIndex] |= 4;
 
-							playerList.get(i).avatarVO.getChiArray()[cardIndex]++ ;
+							playerList.get(i).avatarVO.getChiArray()[cardIndex]++;
 							playerList.get(i).avatarVO.getChiArray()[onePointIndex]++;
 							playerList.get(i).avatarVO.getChiArray()[twoPointIndex]++;
 
-							avatar.getPaiArray()[1][cardIndex] |= 4 ;
+							avatar.getPaiArray()[1][cardIndex] |= 4;
 							avatar.getPaiArray()[1][onePointIndex] |= 4;
-							avatar.getPaiArray()[1][twoPointIndex]  |= 4;
-    					}
+							avatar.getPaiArray()[1][twoPointIndex] |= 4;
+						}
 
 
 						playerList.get(i).getSession().sendMsg(
-								new ChiResponse(1,cardIndex, onePointIndex, twoPointIndex, playerList.indexOf(avatar)));
+								new ChiResponse(1, cardIndex, onePointIndex, twoPointIndex, playerList.indexOf(avatar)));
 					}
-    				 //curAvatarIndex = avatarIndex;// 2016-8-1注释掉
-    				//更新用户的正常牌组(不算上碰，杠，胡，吃)吃牌这里还需要修改****
-    				//playerList.get(avatarIndex).avatarVO.updateCurrentCardList(cardVo.getCardPoint());
-    			}
-    		}else{
-    			if(chiAvatar.size() > 0){
-    				for (Avatar ava : chiAvatar) {
-    					ava.chiQuest = true;
-    					ava.cardVO = cardVo;//存储前段发送过来的吃对象
-    				}
-    			}
-    		}
-    	}
+					//curAvatarIndex = avatarIndex;// 2016-8-1注释掉
+					//更新用户的正常牌组(不算上碰，杠，胡，吃)吃牌这里还需要修改****
+					//playerList.get(avatarIndex).avatarVO.updateCurrentCardList(cardVo.getCardPoint());
+				}
+			} else {
+				if (chiAvatar.size() > 0) {
+					for (Avatar ava : chiAvatar) {
+						ava.chiQuest = true;
+						ava.cardVO = cardVo;//存储前段发送过来的吃对象
+					}
+				}
+			}
+		}
     	else{
     		//system.out.println("只有长沙麻将可以吃!");
     	}
@@ -2252,6 +2254,8 @@ public class PlayCardsLogic {
     		json.put("gameRound", roundNum);//游戏轮数
     		//桌面剩余牌数
     		json.put("surplusCards", listCard.size() - nextCardindex);
+
+			json.put("pickAvatarIndex", pickAvatarIndex);//当前摸牌人的索引
     		//System.out.println(json.toString());
     		avatar.getSession().sendMsg(new ReturnOnLineResponse(1, json.toString()));
 			/*try {
