@@ -280,7 +280,7 @@ public class PlayCardsLogic {
 	 */
 	public boolean checkAvatarIsHuPai(Avatar avatar, int cardIndex, String type) {
 		if (cardIndex != 100) {
-			// 传入的参数牌索引为100时表示天胡/或是摸牌，不需要再在添加到牌组中
+			// 传入的参数牌索引为100c时表示天胡/或是摸牌，不需要再在添加到牌组中
 			// System.out.println("检测胡牌的时候------添加别人打的牌："+cardIndex);
 			avatar.putCardInList(cardIndex);
 		}
@@ -634,7 +634,7 @@ public class PlayCardsLogic {
 						penAvatar.add(ava);
 						sb.append("peng:" + curAvatarIndex + ":" + putOffCardPoint + ",");
 					}
-					if (roomVO.getRoomType() == 3 && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i) {
+					if (roomVO.getRoomType() == 3 && getNextAvatarIndex() == i && ava.checkChi(putOffCardPoint)) {
 						// (长沙麻将)只有下一家才能吃
 						chiAvatar.add(ava);
 						sb.append("chi:" + curAvatarIndex + ":" + putOffCardPoint + ",");
@@ -667,7 +667,7 @@ public class PlayCardsLogic {
 						penAvatar.add(ava);
 						sb.append("peng:" + curAvatarIndex + ":" + putOffCardPoint + ",");
 					}
-					if (roomVO.getRoomType() == 3 && ava.checkChi(putOffCardPoint) && getNextAvatarIndex() == i) {
+					if (roomVO.getRoomType() == 3 && getNextAvatarIndex() == i && ava.checkChi(putOffCardPoint)) {
 						// (长沙麻将)只有下一家才能吃
 						chiAvatar.add(ava);
 						sb.append("chi:" + curAvatarIndex + ":" + putOffCardPoint + ",");
@@ -787,8 +787,7 @@ public class PlayCardsLogic {
 			}
 			return false;
 		}
-		// if((huAvatar.size() == 0 || huAvatar.contains(avatar)) && penAvatar.size() >=
-		// 1)) {
+
 		if ((penAvatar.size() >= 1 && huAvatar.size() == 0)
 				|| (huAvatar.contains(avatar) && huAvatar.size() == 1 && penAvatar.size() == 1)) {
 			avatar.avatarVO.setHasMopaiChupai(true);// 修改出牌 摸牌状态
