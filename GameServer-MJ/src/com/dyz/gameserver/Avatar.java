@@ -540,7 +540,7 @@ public class Avatar implements GameObj {
      * @param type;//碰 1  杠2  胡3  吃4
      */
     public void setCardListStatus(int cardIndex,int type){
-        avatarVO.getPaiArray()[1][cardIndex] = type;
+        avatarVO.getPaiArray()[1][cardIndex] |= type;
     }
 
     /**
