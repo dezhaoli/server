@@ -728,7 +728,7 @@ public class PlayCardsLogic {
 					
 					avatar.avatarVO.getChiArray()[cardIndex] += 1;
 					avatar.avatarVO.getChiArray()[onePointIndex] += 1;
-					avatar.avatarVO.getChiArray()[onePointIndex] += 1;
+					avatar.avatarVO.getChiArray()[twoPointIndex] += 1;
 					
 					// 把各个玩家吃的牌记录到缓存中去,牌的index
 					String str = avatar.getUuId() + ":" + cardIndex + ":" + onePointIndex + ":" + twoPointIndex;

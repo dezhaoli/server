@@ -33,10 +33,10 @@ public class Avatar implements GameObj {
     public boolean gangQuest = false;
     //请求胡
     public boolean huQuest = false;
-    
+
     //当前玩家能否吃
     public boolean canHu = true;
-    
+
     public boolean qiangHu = true;
     /**
      * 是否是一局结算时掉线
@@ -46,7 +46,7 @@ public class Avatar implements GameObj {
      * 存储某一句游戏断线时 结算信息
      */
     public String oneSettlementInfo;
-    
+
     //当自己摸牌时检测自己是否有杠的牌。把杠的牌放入到整个list里面，然后在转入给前端
     public List<Integer> gangIndex = new  ArrayList<Integer>();
     /**
@@ -63,7 +63,7 @@ public class Avatar implements GameObj {
 					9：抢杠	3*3番（谁要杠牌谁出番）
 					10：一炮双响	根据胡牌者的牌型来计算放炮者出的番数（胡牌两方所胡牌型的番数相加）
 					11：一炮三响	根据胡牌者的牌型来计算放炮者出的番数（同上）
-					
+
 				数组格式   牌索引:类型
 				放弃的时候需要清空
 		*
@@ -75,13 +75,13 @@ public class Avatar implements GameObj {
 		*
 		*
 		*
-		* 
-		* 
-		* 		
+		*
+		*
+		*
      */
     public List<String> huAvatarDetailInfo = new ArrayList<String>();
-    
-    
+
+
 
 	public CardVO getCardVO() {
 		return cardVO;
@@ -124,24 +124,24 @@ public class Avatar implements GameObj {
      */
     private AsyncTaskQueue asyncTaskQueue = new AsyncTaskQueue();
     /**
-     * list里面字符串规则 
+     * list里面字符串规则
      * 杠：uuid(出牌家),介绍(明杠，暗杠)  （123，明杠）
      * 自己摸来杠：介绍(明杠，暗杠)
-     * 
+     *
      * 点炮：uuid(出牌家),介绍(胡的类型) （123，qishouhu）
      * 自摸：介绍(胡的类型)
-     * 
+     *
      * 碰：
-     * 
+     *
      * eg:  碰： key:1     value: 碰的牌的下标
      * 			杠：key:2    value: 杠的牌的下标
      * 			胡：key:3    value: 胡的牌的下标
      *         吃：key:4    value:  吃的牌的下标(1:2:3)
-     * 
+     *
      * key:1:碰    2:杠    3:胡   4:吃   5:抢胡
      * value:信息，分条信息之间用","隔开
      */
-    private Map<Integer,String> resultRelation = new HashMap<Integer,String>(); 
+    private Map<Integer,String> resultRelation = new HashMap<Integer,String>();
 
     public Map<Integer,String> getResultRelation() {
 		return resultRelation;
@@ -157,7 +157,7 @@ public class Avatar implements GameObj {
 			}
 		}
 	}
-	
+
 	public Avatar(){
     }
 
@@ -333,7 +333,7 @@ public class Avatar implements GameObj {
     }
     /**
      * 检测当前自己的牌是否可杠
-     * @param  
+     * @param
      * @return
      */
     public boolean checkSelfGang(){
@@ -350,7 +350,7 @@ public class Avatar implements GameObj {
     	boolean flag = false;
     	if(!roomVO.isAddWordCard()){
     		//划水麻将没有风牌  就27
-    		for (int i= 0 ; i < 27 ; i++) {
+    		for (int i= 0 ; i < cardList.length ; i++) {
     			if (cardList[i]  == 4) {
     				//先判断所有4个的牌组中是否有未杠过的
     				gangIndex.add(i);
@@ -443,7 +443,7 @@ public class Avatar implements GameObj {
     		if(cardIndex == 0 && cardList[1] >=1 && cardList[2] >=1 ){
     			flag = true;
     		}
-    		else if(cardIndex == 1 && ((cardList[0] >=1 && cardList[2] >=1) 
+    		else if(cardIndex == 1 && ((cardList[0] >=1 && cardList[2] >=1)
     				|| (cardList[3] >=1 && cardList[2] >=1))){
     			flag = true;
     		}
@@ -456,7 +456,7 @@ public class Avatar implements GameObj {
     		}
     		else if(cardIndex >=2 && cardIndex <= 6){
     		  if((cardList[cardIndex-1] >=1 && cardList[cardIndex+1] >=1)
-    				|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1) 
+    				|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1)
     				|| (cardList[cardIndex+1] >=1 && cardList[cardIndex+2] >=1)){
     			    flag = true;
     		  }
@@ -466,7 +466,7 @@ public class Avatar implements GameObj {
     		if(cardIndex == 9 && cardList[10] >=1 && cardList[11] >=1 ){
     			flag = true;
     		}
-    		else if(cardIndex == 10 && ((cardList[9] >=1 && cardList[11] >=1) 
+    		else if(cardIndex == 10 && ((cardList[9] >=1 && cardList[11] >=1)
     				|| (cardList[11] >=1 && cardList[12] >=1))){
     			flag = true;
     		}
@@ -479,7 +479,7 @@ public class Avatar implements GameObj {
     		}
     		else if(cardIndex >=11 && cardIndex <= 15){
     		  if((cardList[cardIndex-1] >=1 && cardList[cardIndex+1] >=1)
-    				|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1) 
+    				|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1)
     				|| (cardList[cardIndex+1] >=1 && cardList[cardIndex+2] >=1)){
     			flag = true;
     		  }
@@ -489,7 +489,7 @@ public class Avatar implements GameObj {
     		if(cardIndex == 18 && cardList[19] >=1 && cardList[20] >=1 ){
     			flag = true;
     		}
-    		else if(cardIndex == 19 && ((cardList[18] >=1 && cardList[20] >=1) 
+    		else if(cardIndex == 19 && ((cardList[18] >=1 && cardList[20] >=1)
     				|| (cardList[20] >=1 && cardList[21] >=1))){
     			flag = true;
     		}
@@ -502,10 +502,10 @@ public class Avatar implements GameObj {
     		}
     		else if(cardIndex >=20 && cardIndex <= 24){
 	    		 if((cardList[cardIndex-1] >=1 && cardList[cardIndex+1] >=1)
-	    			|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1) 
+	    			|| (cardList[cardIndex-1] >=1 && cardList[cardIndex-2] >=1)
 	    			|| (cardList[cardIndex+1] >=1 && cardList[cardIndex+2] >=1)){
 	    			 flag = true;
-    		  } 
+    		  }
     		}
     	}
         return flag;
@@ -525,7 +525,7 @@ public class Avatar implements GameObj {
         }else{
         	//再没检测出为什么牌组里面已经有4张牌的错误消息前暂且注释掉
             //System.out.println("Error : putCardInList --> 牌数组里已经有4张牌");
-            //try {  
+            //try {
                 //session.sendMsg(new ErrorResponse(ErrorCode.Error_000008));
            // } catch (IOException e) {
             //    e.printStackTrace();
@@ -540,7 +540,7 @@ public class Avatar implements GameObj {
      * @param type;//碰 1  杠2  胡3  吃4
      */
     public void setCardListStatus(int cardIndex,int type){
-        avatarVO.getPaiArray()[1][cardIndex] |= type;
+        avatarVO.getPaiArray()[1][cardIndex] = type;
     }
 
     /**
