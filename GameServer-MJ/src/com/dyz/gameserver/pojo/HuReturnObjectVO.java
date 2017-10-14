@@ -39,6 +39,10 @@ public class HuReturnObjectVO {
      */
     private int totalScore = 0;
     /**
+     * 番数
+     */
+    private int fanCount = 0;
+    /**
      * 存放吃，碰，杠，胡的信息
      */
     private Map<String , String> totalInfo = new HashMap<String, String>() ;
