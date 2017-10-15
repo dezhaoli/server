@@ -135,6 +135,15 @@ public class HuPaiType {
 			}
 		}
 
+		// 天胡
+		if (avatar.avatarVO.isTianHu()) {
+			fanshu = 6;
+		}
+
+		// 人胡
+		if (avatar.avatarVO.isRenHu()) {
+			fanshu = 6;
+		}
 
 		if(avatarShu.getUuId() == avatar.getUuId() ) {
 			//自摸类型

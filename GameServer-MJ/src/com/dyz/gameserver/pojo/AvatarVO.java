@@ -59,6 +59,28 @@ public class AvatarVO {
      */
     private int[][] paiArray;
 
+    public boolean isTianHu() {
+        return isTianHu;
+    }
+
+    public void setTianHu(boolean tianHu) {
+        isTianHu = tianHu;
+    }
+
+    private boolean isTianHu = false;
+
+    public boolean isRenHu() {
+        return isRenHu;
+    }
+
+    public void setRenHu(boolean renHu) {
+        isRenHu = renHu;
+    }
+
+    private boolean isRenHu = false;
+
+
+
     public int[] getChiArray() {
         return chiArray;
     }

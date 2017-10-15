@@ -157,6 +157,9 @@ public class PlayCardsLogic {
 	// 单局是否结束，判断能否调用准备接口 10-11新增
 	boolean singleOver = true;
 
+	boolean canTianHu = true;
+	boolean canRenHu = true;
+
 	// 游戏回放，
 	PlayRecordGameVO playRecordGame;
 	/**
@@ -225,15 +228,10 @@ public class PlayCardsLogic {
 			paiCount = 34;
 		}
 		listCard = new ArrayList<Integer>();
+
 		for (int i = 0; i < paiCount; i++) {
 			for (int k = 0; k < 4; k++) {
-				if (roomVO.getHong() && i == 27) {
-					listCard.add(31);
-				} else if (roomVO.getHong() && i >= 28) {
-					break;
-				} else {
-					listCard.add(i);
-				}
+				listCard.add(i);
 			}
 		}
 
@@ -256,6 +254,10 @@ public class PlayCardsLogic {
 			}
 		}
 
+		// 每局开始时设置可以天胡、人胡
+		canTianHu = true;
+		canRenHu = true;
+
 		// 洗牌
 		shuffleTheCards();
 		// 发牌
@@ -268,6 +270,11 @@ public class PlayCardsLogic {
 	public void shuffleTheCards() {
 		Collections.shuffle(listCard);
 		Collections.shuffle(listCard);
+//		listCard.clear();
+//		for (int i = 0; i < 4; i++) {
+//			listCard.add(i);
+//		}
+
 	}
 
 	/**
@@ -312,6 +319,12 @@ public class PlayCardsLogic {
 	 *
 	 */
 	public void pickCard() {
+		// 第一次摸牌后，就不是天胡
+		canTianHu = false;
+
+		// 只有庄家的第一张牌吃胡才算地胡
+		canRenHu = false;
+
 		clearAvatar();
 		// 摸牌
 		pickAvatarIndex = getNextAvatarIndex();
@@ -354,7 +367,8 @@ public class PlayCardsLogic {
 			}
 			if (checkAvatarIsHuPai(avatar, 100, "mo")) {
 				huAvatar.add(avatar);
-				sb.append("hu,");
+				sb.append("hu:" + currentCardPoint + ",");
+				//sb.append("hu,");
 			}
 			if (sb.length() > 2) {
 				// System.out.println(sb);
@@ -422,7 +436,8 @@ public class PlayCardsLogic {
 			if (checkAvatarIsHuPai(avatar, 100, "ganghu")) {
 				// 检测完之后不需要移除
 				huAvatar.add(avatar);
-				sb.append("hu,");
+				//sb.append("hu,");
+				sb.append("hu:" + currentCardPoint + ",");
 			}
 			if (sb.length() > 2) {
 				// System.out.println(sb);
@@ -623,7 +638,8 @@ public class PlayCardsLogic {
 					if (ava.canHu && checkAvatarIsHuPai(ava, putOffCardPoint, "chu")) {
 						// 胡牌状态为可胡的状态时才行
 						huAvatar.add(ava);
-						sb.append("hu,");
+						//sb.append("hu,");
+						sb.append("hu:" + putOffCardPoint + ",");
 					}
 					if (ava.checkGang(putOffCardPoint)) {
 						gangAvatar.add(ava);
@@ -1101,6 +1117,14 @@ public class PlayCardsLogic {
 	 * @return
 	 */
 	public boolean huPai(Avatar avatar, int cardIndex, String type) {
+		if (canTianHu) {
+			avatar.avatarVO.setTianHu(true);
+		}
+
+		if (canRenHu) {
+			avatar.avatarVO.setRenHu(true);
+		}
+
 		boolean flag = false;
 		// 胡牌就清除掉存的其他人所有的可以碰 杠 吃的信息
 		if (huCount == 0) {
@@ -1159,6 +1183,7 @@ public class PlayCardsLogic {
 						hasPull = false;
 					}
 				}
+
 				if (pickAvatarIndex == curAvatarIndex) {
 					// 把胡了的牌索引放入到对应赢家的牌组中
 					avatar.putCardInList(cardIndex);
@@ -1503,7 +1528,8 @@ public class PlayCardsLogic {
 			huAvatar.add(bankerAvatar);
 			//// 二期优化注释 pickAvatarIndex = playerList.indexOf(bankerAvatar);//第一个摸牌人就是庄家
 			// 发送消息
-			bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu,"));
+			//bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu,"));
+			bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu:" + listCard.get(nextCardindex) + ","));
 			bankerAvatar.huAvatarDetailInfo.add(listCard.get(nextCardindex) + ":" + 0);
 		}
 		// 检测庄家起手有没的杠 长沙麻将叫做大四喜
