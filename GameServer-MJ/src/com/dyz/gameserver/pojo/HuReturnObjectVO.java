@@ -39,14 +39,20 @@ public class HuReturnObjectVO {
      */
     private int totalScore = 0;
 
+	public int getFanCount() {
+		return fanCount;
+	}
+
+	/**
+	 * 番数
+	 */
+	private int fanCount = 0;
+
 	public void setFanCount(int fanCount) {
 		this.fanCount = fanCount;
 	}
 
-	/**
-     * 番数
-     */
-    private int fanCount = 0;
+
     /**
      * 存放吃，碰，杠，胡的信息
      */

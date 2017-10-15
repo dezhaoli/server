@@ -138,10 +138,8 @@ public class HuPaiType {
 		// 天胡
 		if (avatar.avatarVO.isTianHu()) {
 			fanshu = 6;
-		}
-
-		// 人胡
-		if (avatar.avatarVO.isRenHu()) {
+		} // 人胡
+		else if (avatar.avatarVO.isRenHu()) {
 			fanshu = 6;
 		}
 
@@ -160,7 +158,6 @@ public class HuPaiType {
 					str =avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_other_common+":"+huType;
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", -1 * score);
-					playerList.get(i).avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 				}
 			}
 
@@ -181,7 +178,6 @@ public class HuPaiType {
 				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
-				avatarShu.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 			}
 			else{
 				//点炮  多响
@@ -198,7 +194,6 @@ public class HuPaiType {
 				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
-				avatarShu.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 			}
 		}
 	}
