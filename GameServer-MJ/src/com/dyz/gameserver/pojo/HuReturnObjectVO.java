@@ -38,7 +38,12 @@ public class HuReturnObjectVO {
      * 总分
      */
     private int totalScore = 0;
-    /**
+
+	public void setFanCount(int fanCount) {
+		this.fanCount = fanCount;
+	}
+
+	/**
      * 番数
      */
     private int fanCount = 0;

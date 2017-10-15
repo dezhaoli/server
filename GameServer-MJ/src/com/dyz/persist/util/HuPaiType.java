@@ -118,9 +118,26 @@ public class HuPaiType {
 
 		}
 
+		// 爆胡以内加番
+		if (huType <= Rule.HYS) {
+			int[] pais = avatar.avatarVO.getPaiArray()[0];
+
+			// 红中、白板、发财，任意一个刻子为1番，两个刻子为2番，爆胡以外不加番。
+			for (int i = 31; i <= 33; i++) {
+				if (pais[i] >= 3) {
+					fanshu++;
+				}
+			}
+
+			// 在爆胡以内自摸+1番，爆胡以外不加番。
+			if (avatarShu.getUuId() == avatar.getUuId()) {
+				fanshu++;
+			}
+		}
+
+
 		if(avatarShu.getUuId() == avatar.getUuId() ) {
 			//自摸类型
-			fanshu++;
 			score = (int)Math.pow(2.0, fanshu);
 			String str = "";
 			for (int i = 0; i < playerList.size(); i++) {
@@ -128,11 +145,13 @@ public class HuPaiType {
 					str ="0:"+cardIndex+":"+Rule.Hu_zi_common+":"+huType;
 					avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 					avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", score * 3);
+					avatar.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 				}
 				else{
 					str =avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_other_common+":"+huType;
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 					playerList.get(i).avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("1", -1 * score);
+					playerList.get(i).avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 				}
 			}
 
@@ -145,12 +164,15 @@ public class HuPaiType {
 				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 
 				avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("2",1*score);
+				avatar.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
+
 				//修改点炮玩家的番
 				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
 				//存储hu的关系信息 胡玩家uuid：胡牌id：胡牌类型
 				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+				avatarShu.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 			}
 			else{
 				//点炮  多响
@@ -158,6 +180,8 @@ public class HuPaiType {
 				//修改胡家自己的番数
 				avatar.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
 				avatar.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("2",1*score);
+				avatar.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
+
 				//修改点炮玩家的番数
 				avatarShu.avatarVO.getHuReturnObjectVO().updateGangAndHuInfos("3",-1*score);
 
@@ -165,6 +189,7 @@ public class HuPaiType {
 				str = avatar.getUuId()+":"+cardIndex+":"+Rule.Hu_d_other+":"+huType;
 				//点炮信息放入放炮玩家信息中
 				avatarShu.avatarVO.getHuReturnObjectVO().updateTotalInfo("hu", str);
+				avatarShu.avatarVO.getHuReturnObjectVO().setFanCount(fanshu);
 			}
 		}
 	}
