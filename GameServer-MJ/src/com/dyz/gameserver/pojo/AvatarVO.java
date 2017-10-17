@@ -59,6 +59,19 @@ public class AvatarVO {
      */
     private int[][] paiArray;
 
+    public int getMoPaiCount() {
+        return moPaiCount;
+    }
+
+    public void setMoPaiCount(int moPaiCount) {
+        this.moPaiCount = moPaiCount;
+    }
+
+    /**
+     * 摸的牌数
+     */
+    private int moPaiCount = 0;
+
     public boolean isTianHu() {
         return isTianHu;
     }
@@ -79,6 +92,15 @@ public class AvatarVO {
 
     private boolean isRenHu = false;
 
+    public boolean isDiHu() {
+        return isDiHu;
+    }
+
+    public void setDiHu(boolean diHu) {
+        isDiHu = diHu;
+    }
+
+    private boolean isDiHu = false;
 
 
     public int[] getChiArray() {

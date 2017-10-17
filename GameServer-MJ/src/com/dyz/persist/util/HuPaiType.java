@@ -135,12 +135,15 @@ public class HuPaiType {
 			}
 		}
 
-		// 天胡
-		if (avatar.avatarVO.isTianHu()) {
+		if (avatar.avatarVO.isTianHu()) { // 天胡
 			fanshu = 6;
-		} // 人胡
-		else if (avatar.avatarVO.isRenHu()) {
+			huType = Rule.TH;
+		} else if (avatar.avatarVO.isRenHu()) { // 人胡
 			fanshu = 6;
+			huType = Rule.RH;
+		} else if (avatar.avatarVO.isDiHu()) { // 地胡
+			fanshu = 6;
+			huType = Rule.DH;
 		}
 
 		if(avatarShu.getUuId() == avatar.getUuId() ) {

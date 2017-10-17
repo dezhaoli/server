@@ -159,6 +159,7 @@ public class PlayCardsLogic {
 
 	boolean canTianHu = true;
 	boolean canRenHu = true;
+	boolean canDiHu = true;
 
 	// 游戏回放，
 	PlayRecordGameVO playRecordGame;
@@ -236,6 +237,7 @@ public class PlayCardsLogic {
 		}
 
 		for (int i = 0; i < playerList.size(); i++) {
+			playerList.get(i).avatarVO.setMoPaiCount(0); // 创始化摸牌数
 			playerList.get(i).avatarVO.setPaiArray(new int[2][paiCount]);
 			for (int j = 0; j < 2; j++) {
 				for (int k = 0; k < paiCount; k++) {
@@ -254,9 +256,10 @@ public class PlayCardsLogic {
 			}
 		}
 
-		// 每局开始时设置可以天胡、人胡
+		// 每局开始时设置可以天地人胡
 		canTianHu = true;
 		canRenHu = true;
+		canDiHu = true;
 
 		// 洗牌
 		shuffleTheCards();
@@ -271,10 +274,81 @@ public class PlayCardsLogic {
 		Collections.shuffle(listCard);
 		Collections.shuffle(listCard);
 //		listCard.clear();
-//		for (int i = 0; i < 4; i++) {
-//			listCard.add(i);
+//
+//		listCard.add(0);
+//		listCard.add(1);
+//		listCard.add(2);
+//		listCard.add(0);
+//		listCard.add(1);
+//		listCard.add(2);
+//		listCard.add(0);
+//		listCard.add(1);
+//		listCard.add(2);
+//		listCard.add(0);
+//		listCard.add(1);
+//		listCard.add(2);
+//
+//		listCard.add(3);
+//		listCard.add(4);
+//		listCard.add(5);
+//		listCard.add(3);
+//		listCard.add(4);
+//		listCard.add(5);
+//		listCard.add(3);
+//		listCard.add(4);
+//		listCard.add(5);
+//		listCard.add(3);
+//		listCard.add(4);
+//		listCard.add(5);
+//
+//		listCard.add(6);
+//		listCard.add(7);
+//		listCard.add(8);
+//		listCard.add(6);
+//		listCard.add(7);
+//		listCard.add(8);
+//		listCard.add(6);
+//		listCard.add(7);
+//		listCard.add(8);
+//		listCard.add(6);
+//		listCard.add(7);
+//		listCard.add(8);
+//
+//		listCard.add(9);
+//		listCard.add(10);
+//		listCard.add(11);
+//		listCard.add(9);
+//		listCard.add(10);
+//		listCard.add(11);
+//		listCard.add(9);
+//		listCard.add(10);
+//		listCard.add(11);
+//		listCard.add(9);
+//		listCard.add(10);
+//		listCard.add(11);
+//
+//		listCard.add(12);
+//		listCard.add(13);
+//		listCard.add(14);
+//
+//		listCard.add(12);
+//		listCard.add(13);
+//		listCard.add(14);
+//
+//		listCard.add(12);
+//		listCard.add(13);
+//		listCard.add(14);
+//
+//		listCard.add(12);
+//		listCard.add(13);
+//		listCard.add(14);
+//
+//
+//		for (int i = 16; i < 34; i++) {
+//			for (int j = 0; j < 4; j++) {
+//				listCard.add(i);
+//			}
 //		}
-
 	}
 
 	/**
@@ -319,9 +393,6 @@ public class PlayCardsLogic {
 	 *
 	 */
 	public void pickCard() {
-		// 第一次摸牌后，就不是天胡
-		canTianHu = false;
-
 		// 只有庄家的第一张牌吃胡才算地胡
 		canRenHu = false;
 
@@ -342,6 +413,8 @@ public class PlayCardsLogic {
 			avatar.qiangHu = true;
 			avatar.canHu = true;
 			avatar.avatarVO.setHuType(0);// 重置划水麻将胡牌格式
+			avatar.avatarVO.setMoPaiCount(avatar.avatarVO.getMoPaiCount() + 1);
+
 			// 记录摸牌信息
 			// avatar.canHu = true;
 			avatar.getSession().sendMsg(new PickCardResponse(1, tempPoint));
@@ -385,6 +458,8 @@ public class PlayCardsLogic {
 			// 流局处理，直接算分
 			settlementData("1");
 		}
+
+
 	}
 
 	/**
@@ -569,6 +644,9 @@ public class PlayCardsLogic {
 	 * @param cardPoint
 	 */
 	public void putOffCard(Avatar avatar, int cardPoint) {
+		// 出了第一张牌就不可能是天胡
+		canTianHu = false;
+
 		if (roomVO.getRoomType() == 2) {
 			if (followBanke) {
 				if (followPoint == -1) {
@@ -713,6 +791,10 @@ public class PlayCardsLogic {
 	 * @return
 	 */
 	public boolean chiCard(Avatar avatar, CardVO cardVo) {
+		// 吃牌了就不可能是地,人胡
+		canDiHu = false;
+		canRenHu = false;
+
 		// 碰，杠都比吃优先
 		boolean flag = false;
 		// int avatarIndex = playerList.indexOf(avatar);
@@ -785,6 +867,10 @@ public class PlayCardsLogic {
 	 * @return
 	 */
 	public boolean pengCard(Avatar avatar, int cardIndex) {
+		// 碰牌了就不可能是地、人胡
+		canDiHu = false;
+		canRenHu = false;
+
 		boolean flag = false;
 		// 这里可能是自己能胡能碰能杠 但是选择碰
 		if (cardIndex != putOffCardPoint) {
@@ -857,6 +943,10 @@ public class PlayCardsLogic {
 	 * @return
 	 */
 	public boolean gangCard(Avatar avatar, int cardPoint, int gangType) {
+		// 杠牌了就不可能是地、人胡
+		canDiHu = false;
+		canRenHu = false;
+
 		boolean flag = false;
 		if (roomVO.getRoomType() == 2) {
 			if (followBanke) {
@@ -1117,12 +1207,16 @@ public class PlayCardsLogic {
 	 * @return
 	 */
 	public boolean huPai(Avatar avatar, int cardIndex, String type) {
-		if (canTianHu) {
+		if (canTianHu && avatar == bankerAvatar) {
 			avatar.avatarVO.setTianHu(true);
 		}
 
 		if (canRenHu) {
 			avatar.avatarVO.setRenHu(true);
+		}
+
+		if (canDiHu && avatar != bankerAvatar && avatar.avatarVO.getMoPaiCount() == 1) {
+			avatar.avatarVO.setDiHu(true);
 		}
 
 		boolean flag = false;
@@ -1528,8 +1622,9 @@ public class PlayCardsLogic {
 			huAvatar.add(bankerAvatar);
 			//// 二期优化注释 pickAvatarIndex = playerList.indexOf(bankerAvatar);//第一个摸牌人就是庄家
 			// 发送消息
+			bankerAvatar.getSession().sendMsg(new ReturnInfoResponse(1, "hu,"));
 			//bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu,"));
-			bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu:" + listCard.get(nextCardindex) + ","));
+			//bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu:" + listCard.get(nextCardindex) + ","));
 			bankerAvatar.huAvatarDetailInfo.add(listCard.get(nextCardindex) + ":" + 0);
 		}
 		// 检测庄家起手有没的杠 长沙麻将叫做大四喜
@@ -1547,6 +1642,10 @@ public class PlayCardsLogic {
 			// bankerAvatar.huAvatarDetailInfo.add(bankerAvatar.gangIndex.get(0)+":"+2);
 			// bankerAvatar.gangIndex.clear();
 		}
+
+		// 庄家摸了第一次牌
+		bankerAvatar.avatarVO.setMoPaiCount(bankerAvatar.avatarVO.getMoPaiCount() + 1 );
+
 		// 游戏回放
 		PlayRecordInit();
 	}
