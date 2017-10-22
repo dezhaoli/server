@@ -237,23 +237,7 @@ public class PlayCardsLogic {
 		}
 
 		for (int i = 0; i < playerList.size(); i++) {
-			playerList.get(i).avatarVO.setMoPaiCount(0); // 创始化摸牌数
-			playerList.get(i).avatarVO.setPaiArray(new int[2][paiCount]);
-			for (int j = 0; j < 2; j++) {
-				for (int k = 0; k < paiCount; k++) {
-					playerList.get(i).avatarVO.getPaiArray()[j][k] = 0;
-				}
-			}
-
-			playerList.get(i).avatarVO.setChiArray(new int[paiCount]);
-			playerList.get(i).avatarVO.setPengArray(new int[paiCount]);
-			playerList.get(i).avatarVO.setGangArray(new int[paiCount]);
-
-			for (int j = 0; j < paiCount; j++) {
-				playerList.get(i).avatarVO.getChiArray()[j] = 0;
-				playerList.get(i).avatarVO.getPengArray()[j] = 0;
-				playerList.get(i).avatarVO.getGangArray()[j] = 0;
-			}
+			playerList.get(i).avatarVO.Init(paiCount); // 创始化
 		}
 
 		// 每局开始时设置可以天地人胡
@@ -373,8 +357,10 @@ public class PlayCardsLogic {
 				// System.out.println("检测胡牌成功的时候------移除别人打的牌："+cardIndex);
 				avatar.pullCardFormList(cardIndex);
 			} else if (type.equals("ganghu")) {
+				// 鸡平胡，抢杠
+				avatar.avatarVO.setGangHu(true);
 				// 划水麻将杠上花 ，大胡
-				avatar.avatarVO.setHuType(2);
+				// avatar.avatarVO.setHuType(2);
 			}
 			return true;
 		} else {
@@ -1025,10 +1011,10 @@ public class PlayCardsLogic {
 									recordType = "5";
 									endStatisticstype = "minggang";
 								} else {
-									// 长沙麻将
+									// 广东麻将杠没有钱
 									str = "0:" + cardPoint + ":" + Rule.Gang_ming;
 									type = 0;
-									score = 1;
+									score = 0;
 									recordType = "5";
 									endStatisticstype = "minggang";
 
@@ -1060,10 +1046,10 @@ public class PlayCardsLogic {
 								recordType = "4";
 								endStatisticstype = "angang";
 							} else {
-								// 长沙麻将
+								// 广东麻将杠没有钱
 								str = "0:" + cardPoint + ":" + Rule.Gang_an;
 								type = 1;
-								score = 2;
+								score = 0;
 								recordType = "4";
 								endStatisticstype = "angang";
 
@@ -1114,7 +1100,7 @@ public class PlayCardsLogic {
 							endStatisticstype = "fanggang";
 						} else {
 							// 长沙麻将
-							score = 3;
+							score = 0;
 							recordType = "5";
 							str = playerList.get(curAvatarIndex).getUuId() + ":" + cardPoint + ":" + Rule.Gang_dian;
 							type = 0;
@@ -1993,6 +1979,9 @@ public class PlayCardsLogic {
 				avatar.avatarVO.getChiArray());
 
 		if (flag > 0) {
+			if (nextCardindex == 135) {
+				avatar.avatarVO.setHaiDiLaoYue(true);
+			}
 			avatar.avatarVO.setHuType(flag);
 			return true;
 		} else {

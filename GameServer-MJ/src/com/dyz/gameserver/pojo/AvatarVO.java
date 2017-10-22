@@ -102,6 +102,25 @@ public class AvatarVO {
 
     private boolean isDiHu = false;
 
+    public boolean isHaiDiLaoYue() {
+        return isHaiDiLaoYue;
+    }
+
+    public void setHaiDiLaoYue(boolean haiDiLaoYue) {
+        isHaiDiLaoYue = haiDiLaoYue;
+    }
+
+    private boolean isHaiDiLaoYue = false;
+
+    public boolean isGangHu() {
+        return isGangHu;
+    }
+
+    public void setGangHu(boolean gangHu) {
+        isGangHu = gangHu;
+    }
+
+    private boolean isGangHu = false;
 
     public int[] getChiArray() {
         return chiArray;
@@ -271,6 +290,32 @@ public class AvatarVO {
 	public void setIP(String iP) {
 		IP = iP;
 	}
+
+	public void Init(int paiCount) {
+        this.setMoPaiCount(0);
+        this.setDiHu(false);
+        this.setTianHu(false);
+        this.setRenHu(false);
+        this.setHaiDiLaoYue(false);
+        this.setGangHu(false);
+
+        this.setPaiArray(new int[2][paiCount]);
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < paiCount; k++) {
+                this.getPaiArray()[j][k] = 0;
+            }
+        }
+
+        this.setChiArray(new int[paiCount]);
+        this.setPengArray(new int[paiCount]);
+        this.setGangArray(new int[paiCount]);
+
+        for (int j = 0; j < paiCount; j++) {
+            this.getChiArray()[j] = 0;
+            this.getPengArray()[j] = 0;
+            this.getGangArray()[j] = 0;
+        }
+    }
 	
 	
 }

@@ -64,6 +64,8 @@ public class Rule {
     public static final int DSX = 14;
     public static final int JLBD = 15;
     public static final int SSY = 16;
-    
+    public static final int TH = 17;
+    public static final int DH = 18;
+    public static final int RH = 19;
 }
 

@@ -146,6 +146,14 @@ public class HuPaiType {
 			huType = Rule.DH;
 		}
 
+		if (avatar.avatarVO.isHaiDiLaoYue() && fanshu < 3) {
+			fanshu = 3;
+		}
+
+		if (avatar.avatarVO.isGangHu() && fanshu < 3) {
+			fanshu = 3;
+		}
+
 		if(avatarShu.getUuId() == avatar.getUuId() ) {
 			//自摸类型
 			score = (int)Math.pow(2.0, fanshu);
@@ -853,8 +861,8 @@ public class HuPaiType {
 	}
 
 	// 判断是否混碰
-	public boolean checkHP(PaiVO paivo, int shunzi) {
-		if (checkHYS(paivo) && checkPPH(paivo, shunzi)) {
+	public boolean checkHP(PaiVO paivo, PaiVO paivoAll, int shunzi) {
+		if (checkHYS(paivoAll) && checkPPH(paivo, shunzi)) {
 			return true;
 		}
 
@@ -862,8 +870,8 @@ public class HuPaiType {
 	}
 
 	// 判断是否清碰
-	public boolean checkQP(PaiVO paivo, int shunzi) {
-		if (checkQYS(paivo) && checkPPH(paivo, shunzi)) {
+	public boolean checkQP(PaiVO paivo, PaiVO paivoAll, int shunzi) {
+		if (checkQYS(paivoAll) && checkPPH(paivo, shunzi)) {
 			return true;
 		}
 

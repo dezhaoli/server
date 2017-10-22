@@ -15,15 +15,51 @@ public class NormalHuPai {
     private int JIANG = 0;
 
     public static void main(String[] args){
-        int[][] paiList = new int[][]{{0,0,1,1,1,0,1,1,1,     0,0,0,0,0,1,1,3,0,     0,0,0,0,0,0,3,0,0,   0,0,0,0,0,0,0},
+        int[][] paiList = new int[][]{{0,0,0,0,0,3,0,0,0,     0,0,0,0,0,0,3,0,0,     0,1,1,1,0,0,0,0,0,   2,3,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0}};
 
-        int[] peng = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] peng = new int[] {0,0,0,0,0,1,0,0,0,     0,0,0,0,0,0,1,0,0,     0,0,0,0,0,0,0,0,0,   0,1,0,0,0,0,0};
         int[] gang = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
-        int[] chi = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] chi = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,1,1,1,0,0,0,0,0,   0,0,0,0,0,0,0};
 
         NormalHuPai pai = new NormalHuPai();
-        System.out.println(pai.checkGDhu(paiList, peng, gang, chi));
+        int hutype = pai.checkGDhu(paiList, peng, gang, chi);
+        System.out.println(hutype);
+
+        int fanshu = 0;
+        switch (hutype){
+            case Rule.JH: fanshu = 0; break;
+            case Rule.PH: fanshu = 1; break;
+            case Rule.PPH: fanshu = 2; break;
+            case Rule.HYS: fanshu = 2; break;
+            case Rule.QYS: fanshu = 4; break;
+            case Rule.HP: fanshu = 4; break;
+            case Rule.QP: fanshu = 5; break;
+            case Rule.HYJ: fanshu = 5; break;
+            case Rule.XSY: fanshu = 5; break;
+            case Rule.XSX: fanshu = 5; break;
+            case Rule.ZYS: fanshu = 6; break;
+            case Rule.QYJ: fanshu = 6; break;
+            case Rule.DSY: fanshu = 6; break;
+            case Rule.DSX: fanshu = 6; break;
+            case Rule.JLBD: fanshu = 6; break;
+            case Rule.SSY: fanshu = 6; break;
+
+        }
+
+        // 爆胡以内加番
+        if (hutype <= Rule.HYS) {
+            int[] pais = paiList[0];
+
+            // 红中、白板、发财，任意一个刻子为1番，两个刻子为2番，爆胡以外不加番。
+            for (int i = 31; i <= 33; i++) {
+                if (pais[i] >= 3) {
+                    fanshu++;
+                }
+            }
+        }
+
+        System.out.println(fanshu);
     }
 
     public int checkGDhu(int[][] paiList, int[] peng, int[] gang, int[] chi){
@@ -70,12 +106,13 @@ public class NormalHuPai {
         if (hu) {
             //int[] pai2 =GlobalUtil.CloneIntList(paiList[0]);
             PaiVO paivo1 = new PaiVO(org);
+            PaiVO paivoAll = new PaiVO(paiList[0]);
             int shunzi_shun = hasChiZuCount + hupaivo_shun.shunzi;
             int kezi_shun = hasPengZuCount + hasGangZuCount + hupaivo_shun.kezi;
             int shunzi_ke = hasChiZuCount + hupaivo_ke.shunzi;
             int kezi_ke = hasPengZuCount + hasGangZuCount + hupaivo_ke.kezi;
 
-            return checkGDHuType(paivo1, shunzi_shun, kezi_shun, shunzi_ke, kezi_ke);
+            return checkGDHuType(paivo1, paivoAll, shunzi_shun, kezi_shun, shunzi_ke, kezi_ke);
         }
         return 0;
     }
@@ -89,48 +126,48 @@ public class NormalHuPai {
      * @param kezi_ke
      * @return
      */
-    public int checkGDHuType(PaiVO paivo, int shunzi_shun, int kezi_shun, int shunzi_ke, int kezi_ke) {
-        if (HuPaiType.getInstance().checkDSX(paivo)) {
+    public int checkGDHuType(PaiVO paivo, PaiVO paivoAll, int shunzi_shun, int kezi_shun, int shunzi_ke, int kezi_ke) {
+        if (HuPaiType.getInstance().checkDSX(paivoAll)) {
             return Rule.DSX;
         }
 
-        if (HuPaiType.getInstance().checkDSY(paivo)) {
+        if (HuPaiType.getInstance().checkDSY(paivoAll)) {
             return Rule.DSY;
         }
 
-        if (HuPaiType.getInstance().checkQYJ(paivo)) {
+        if (HuPaiType.getInstance().checkQYJ(paivoAll)) {
             return Rule.QYJ;
         }
 
-        if (HuPaiType.getInstance().checkZYS(paivo)) {
+        if (HuPaiType.getInstance().checkZYS(paivoAll)) {
             return Rule.ZYS;
         }
 
-        if (HuPaiType.getInstance().checkXSX(paivo)) {
+        if (HuPaiType.getInstance().checkXSX(paivoAll)) {
             return Rule.XSX;
         }
 
-        if (HuPaiType.getInstance().checkXSY(paivo)) {
+        if (HuPaiType.getInstance().checkXSY(paivoAll)) {
             return Rule.XSY;
         }
 
-        if (HuPaiType.getInstance().checkHYJ(paivo)) {
+        if (HuPaiType.getInstance().checkHYJ(paivoAll)) {
             return Rule.HYJ;
         }
 
-        if (HuPaiType.getInstance().checkQP(paivo, shunzi_ke)) {
+        if (HuPaiType.getInstance().checkQP(paivo, paivoAll, shunzi_ke)) {
             return Rule.QP;
         }
 
-        if (HuPaiType.getInstance().checkHP(paivo, shunzi_ke)) {
+        if (HuPaiType.getInstance().checkHP(paivo, paivoAll, shunzi_ke)) {
             return Rule.HP;
         }
 
-        if (HuPaiType.getInstance().checkQYS(paivo)) {
+        if (HuPaiType.getInstance().checkQYS(paivoAll)) {
             return Rule.QYS;
         }
 
-        if (HuPaiType.getInstance().checkHYS(paivo)) {
+        if (HuPaiType.getInstance().checkHYS(paivoAll)) {
             return Rule.HYS;
         }
 
@@ -400,12 +437,10 @@ public class NormalHuPai {
                 paiList[i] += 2;                                   //   取消2张组合
                 JIANG = 0;                                       //   清除将牌标志
             }
-            if   ( i> 27){
-                return   false;               //   “东南西北中发白”没有顺牌组合，不胡
-            }
+
             //   顺牌组合，注意是从前往后组合！
             //   排除数值为8和9的牌å
-            if (i %9!=7 && i%9 != 8 && paiList[i] != 0 && paiList[i+1]!=0 && paiList[i+2]!=0)             //   如果后面有连续两张牌
+            if (i < 27 && i %9!=7 && i%9 != 8 && paiList[i] != 0 && paiList[i+1]!=0 && paiList[i+2]!=0)             //   如果后面有连续两张牌
             {
                 paiList[i]--;
                 paiList[i + 1]--;
