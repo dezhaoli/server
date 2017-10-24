@@ -15,12 +15,12 @@ public class NormalHuPai {
     private int JIANG = 0;
 
     public static void main(String[] args){
-        int[][] paiList = new int[][]{{0,0,0,0,0,3,0,0,0,     0,0,0,0,0,0,3,0,0,     0,1,1,1,0,0,0,0,0,   2,3,0,0,0,0,0},
+        int[][] paiList = new int[][]{{0,0,0,0,0,0,0,0,0,     1,1,1,0,2,0,0,4,0,     1,1,1,0,2,1,0,0,0,   0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0}};
 
-        int[] peng = new int[] {0,0,0,0,0,1,0,0,0,     0,0,0,0,0,0,1,0,0,     0,0,0,0,0,0,0,0,0,   0,1,0,0,0,0,0};
-        int[] gang = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
-        int[] chi = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,1,1,1,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] peng = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] gang = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,1,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
+        int[] chi = new int[] {0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,     0,0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0};
 
         NormalHuPai pai = new NormalHuPai();
         int hutype = pai.checkGDhu(paiList, peng, gang, chi);
@@ -94,6 +94,7 @@ public class NormalHuPai {
         }
 
         // 判断是否一般牌型胡 AAA AAA AAA AAA AA
+        JIANG = 0;
         int[] pai =GlobalUtil.CloneIntList(org);
         HupaiVO hupaivo_shun = new HupaiVO(); // 顺子优先，看看看多少顺子和刻子
         boolean hu = isJPHPai_shun(pai, hupaivo_shun);

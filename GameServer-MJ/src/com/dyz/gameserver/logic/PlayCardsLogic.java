@@ -992,6 +992,10 @@ public class PlayCardsLogic {
 								avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
 								avatar.getPaiArray()[1][cardPoint] = 2;
 								avatar.avatarVO.getGangArray()[cardPoint] = 1;
+								// 杠了后，原来碰的去掉
+								if (avatar.avatarVO.getPengArray()[cardPoint] == 1) {
+									avatar.avatarVO.getPengArray()[cardPoint] = 0;
+								}
 
 								avatar.setCardListStatus(cardPoint, 2);// 杠牌标记2
 								if (roomVO.getRoomType() == 1) {
@@ -1027,6 +1031,10 @@ public class PlayCardsLogic {
 							avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
 							avatar.getPaiArray()[1][cardPoint] = 2;
 							avatar.avatarVO.getGangArray()[cardPoint] = 1;
+							// 杠了后，原来碰的去掉
+							if (avatar.avatarVO.getPengArray()[cardPoint] == 1) {
+								avatar.avatarVO.getPengArray()[cardPoint] = 0;
+							}
 
 							avatar.setCardListStatus(cardPoint, 2);// 杠牌标记2
 							// 暗杠
@@ -1075,6 +1083,10 @@ public class PlayCardsLogic {
 						avatar.avatarVO.getPaiArray()[1][cardPoint] = 2;
 						avatar.getPaiArray()[1][cardPoint] = 2;
 						avatar.avatarVO.getGangArray()[cardPoint] = 1;
+						// 杠了后，原来碰的去掉
+						if (avatar.avatarVO.getPengArray()[cardPoint] == 1) {
+							avatar.avatarVO.getPengArray()[cardPoint] = 0;
+						}
 
 						avatar.setCardListStatus(cardPoint, 2);// 杠牌标记2
 						// 点杠(分在明杠里面)（划水麻将里面的放杠）
@@ -1343,13 +1355,40 @@ public class PlayCardsLogic {
 				}
 			} else {
 				// 重新分配庄家，下一局胡家坐庄
-				for (Avatar itemAva : playerList) {
-					if (avatar.getUuId() == itemAva.getUuId()) {
-						bankerAvatar = itemAva;
-						itemAva.avatarVO.setMain(true);
-					} else {
-						itemAva.avatarVO.setMain(false);
+				// 鸡平重新分配庄家，如果庄家胡，就跟庄，如果非庄家胡就下一家做庄
+				if (avatar == bankerAvatar) {
+					for (Avatar itemAva : playerList) {
+						if (avatar.getUuId() == itemAva.getUuId()) {
+							itemAva.avatarVO.setMain(true);
+						} else {
+							itemAva.avatarVO.setMain(false);
+						}
 					}
+				} else {
+					int mainIndex = 0;
+
+					for (int i = 0; i < 4; i++) {
+						if (playerList.get(i) == bankerAvatar) {
+							mainIndex = i;
+							break;
+						}
+					}
+
+					int nextmainIndex = mainIndex + 1;
+					if (nextmainIndex == 4) {
+						nextmainIndex = 0;
+					}
+
+					for (int i = 0; i < 4; i++) {
+						if (i == nextmainIndex) {
+							playerList.get(i).avatarVO.setMain(true);
+							bankerAvatar = playerList.get(i);
+						} else {
+							playerList.get(i).avatarVO.setMain(false);
+						}
+					}
+
+
 				}
 			}
 			// 更新roomlogic的PlayerList信息
@@ -1586,6 +1625,7 @@ public class PlayCardsLogic {
 	private void dealingTheCards() {
 		nextCardindex = 0;
 		bankerAvatar = null;
+
 		for (int i = 0; i < 13; i++) {
 			for (int k = 0; k < playerList.size(); k++) {
 				if (bankerAvatar == null) {
@@ -1599,8 +1639,8 @@ public class PlayCardsLogic {
 				nextCardindex++;
 			}
 		}
+
 		bankerAvatar.putCardInList(listCard.get(nextCardindex));
-		// nextCardindex++;
 		singleOver = false;
 		// 检测一下庄家有没有天胡
 		if (checkHu(bankerAvatar, listCard.get(nextCardindex))) {
