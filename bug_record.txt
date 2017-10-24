@@ -1,0 +1,85 @@
+战绩没有数据返回：
+res: 00002002 , []
+
+
+---------------------------------------
+重播功能没测
+
+
+
+---------------------------------------
+投奖没测
+
+
+---------------------------------------
+排行榜没实现
+
+
+---------------------------------------
+重播，吃的没实现
+
+---------------------------------------
+风向没做
+
+
+
+
+---------------------------------------
+时间=Tue Oct 24 11:08:30 CST 2017 执行了2次
+org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: org.apache.ibatis.transaction.TransactionException: Error configuring AutoCommit.  Your driver may not support getAutoCommit() or setAutoCommit(). Requested setting: false.  Cause: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: The last packet successfully received from the server was72354 milliseconds ago.The last packet sent successfully to the server was 72354 milliseconds ago, which  is longer than the server configured value of 'wait_timeout'. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property 'autoReconnect=true' to avoid this problem.
+### The error may exist in com/dyz/myBatis/sqlMapper/PrizeRuleMapper.xml
+### The error may involve com.dyz.myBatis.dao.PrizeRuleMapper.selectByPrimaryKey
+### The error occurred while executing a query
+### Cause: org.apache.ibatis.transaction.TransactionException: Error configuring AutoCommit.  Your driver may not support getAutoCommit() or setAutoCommit(). Requested setting: false.  Cause: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: The last packet successfully received from the server was72354 milliseconds ago.The last packet sent successfully to the server was 72354 milliseconds ago, which  is longer than the server configured value of 'wait_timeout'. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property 'autoReconnect=true' to avoid this problem.
+	at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:23)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:107)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:98)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:62)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:63)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:43)
+	at com.sun.proxy.$Proxy3.selectByPrimaryKey(Unknown Source)
+	at com.dyz.myBatis.daoImp.PrizeRuleDaoImp.selectByPrimaryKey(PrizeRuleDaoImp.java:52)
+	at com.dyz.myBatis.services.PrizeRuleService.selectByPrimaryKey(PrizeRuleService.java:24)
+	at com.dyz.persist.util.TaskTimer$1.run(TaskTimer.java:34)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: org.apache.ibatis.transaction.TransactionException: Error configuring AutoCommit.  Your driver may not support getAutoCommit() or setAutoCommit(). Requested setting: false.  Cause: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: The last packet successfully received from the server was72354 milliseconds ago.The last packet sent successfully to the server was 72354 milliseconds ago, which  is longer than the server configured value of 'wait_timeout'. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property 'autoReconnect=true' to avoid this problem.
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.setDesiredAutoCommit(JdbcTransaction.java:102)
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.openConnection(JdbcTransaction.java:135)
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.getConnection(JdbcTransaction.java:58)
+	at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:271)
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:69)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:56)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:259)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:132)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:105)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:81)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:104)
+	... 10 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: The last packet successfully received from the server was72354 milliseconds ago.The last packet sent successfully to the server was 72354 milliseconds ago, which  is longer than the server configured value of 'wait_timeout'. You should consider either expiring and/or testing connection validity before use in your application, increasing the server configured values for client timeouts, or using the Connector/J connection property 'autoReconnect=true' to avoid this problem.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:406)
+	at com.mysql.jdbc.SQLError.createCommunicationsException(SQLError.java:1074)
+	at com.mysql.jdbc.MysqlIO.send(MysqlIO.java:3270)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:1932)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2101)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2548)
+	at com.mysql.jdbc.ConnectionImpl.setAutoCommit(ConnectionImpl.java:4916)
+	at sun.reflect.GeneratedMethodAccessor58.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:245)
+	at com.sun.proxy.$Proxy5.setAutoCommit(Unknown Source)
+	at org.apache.ibatis.transaction.jdbc.JdbcTransaction.setDesiredAutoCommit(JdbcTransaction.java:97)
+	... 20 more
+Caused by: java.net.SocketException: Broken pipe (Write failed)
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:155)
+	at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)
+	at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)
+	at com.mysql.jdbc.MysqlIO.send(MysqlIO.java:3251)
