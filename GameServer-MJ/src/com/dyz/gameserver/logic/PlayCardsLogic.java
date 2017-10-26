@@ -1213,7 +1213,8 @@ public class PlayCardsLogic {
 			avatar.avatarVO.setRenHu(true);
 		}
 
-		if (canDiHu && avatar != bankerAvatar && avatar.avatarVO.getMoPaiCount() == 1) {
+		if (canDiHu && avatar != bankerAvatar && avatar == playerList.get(curAvatarIndex)
+				&& avatar.avatarVO.getMoPaiCount() == 1) {
 			avatar.avatarVO.setDiHu(true);
 		}
 

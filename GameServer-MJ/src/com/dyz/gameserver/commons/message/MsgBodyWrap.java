@@ -107,6 +107,8 @@ public class MsgBodyWrap {
 
 	public void writeUTF(String value) throws IOException {
 		dataOut.writeUTF(value);
+
+		System.out.println(value);
 	}
 
 	public byte[] toByteArray() {

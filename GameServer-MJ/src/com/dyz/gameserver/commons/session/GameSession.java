@@ -76,6 +76,7 @@ public class GameSession implements GameObj {
 			//system.out.println("session == "+session+" session.isConnected ==  "+session.isConnected()+" session.isClosing =  "+session.isClosing());
 			return null;
 		}
+
 		return session.write(msg);
 	}
 
