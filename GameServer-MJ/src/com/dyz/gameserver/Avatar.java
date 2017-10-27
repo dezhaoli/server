@@ -537,7 +537,7 @@ public class Avatar implements GameObj {
     /**
      * 设置牌的状态
      * @param cardIndex
-     * @param type;//碰 1  杠2  胡3  吃4
+     * @param type;//碰 1  杠2   吃4  胡8
      */
     public void setCardListStatus(int cardIndex,int type){
         avatarVO.getPaiArray()[1][cardIndex] |= type;

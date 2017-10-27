@@ -1224,7 +1224,8 @@ public class PlayCardsLogic {
 			huCount = huAvatar.size();
 		}
 		StringBuffer sb = new StringBuffer();
-		avatar.getPaiArray()[1][cardIndex] = 3;
+		avatar.setCardListStatus(cardIndex, 8);
+
 		// 当胡家手上没有红中，则多抓一个码
 		int playRecordType = 6;// 胡牌的分类
 		int listCount = avatar.getRoomVO().getMa();
