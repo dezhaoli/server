@@ -603,7 +603,7 @@ public class NormalHuPai {
     int Remain(int[] paiList) {
         int sum = 0;
         for (int i = 0; i < paiList.length; i++) {
-            sum += paiList[i];
+            sum += Math.abs(paiList[i]);
         }
         return sum;
     }
