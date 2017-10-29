@@ -161,6 +161,8 @@ public class PlayCardsLogic {
 	boolean canRenHu = true;
 	boolean canDiHu = true;
 
+	boolean mainHasHu = false;
+
 	// 游戏回放，
 	PlayRecordGameVO playRecordGame;
 	/**
@@ -244,6 +246,7 @@ public class PlayCardsLogic {
 		canTianHu = true;
 		canRenHu = true;
 		canDiHu = true;
+		mainHasHu = false;
 
 		// 洗牌
 		shuffleTheCards();
@@ -1285,6 +1288,11 @@ public class PlayCardsLogic {
 					// 当摸牌人的索引等于出牌人的索引时，表示点炮了
 					// 点炮 别人点炮的时候查看是否可以胡
 					if (avatar.canHu) {
+						// 庄胡牌
+						if (avatar == bankerAvatar) {
+							mainHasHu = true;
+						}
+
 						// 胡牌数组中移除掉胡了的人
 						huAvatar.remove(avatar);
 						gangAvatar.clear();
@@ -1319,6 +1327,12 @@ public class PlayCardsLogic {
 					gangAvatar.clear();
 					penAvatar.clear();
 					chiAvatar.clear();
+
+					// 庄胡牌
+					if (avatar == bankerAvatar) {
+						mainHasHu = true;
+					}
+
 					;
 					// 两个人之间建立关联，游戏结束算账用 自摸不会出现抢胡的情况
 					if (!validMa.isEmpty()) {
@@ -1344,54 +1358,42 @@ public class PlayCardsLogic {
 		if (huAvatar.size() == 0 && numb == 1) {
 			numb++;
 			// 所有人胡完
-			if (huCount >= 2) {
-				// 重新分配庄家，下一局点炮的玩家坐庄
+
+			// 重新分配庄家，下一局胡家坐庄
+			// 鸡平重新分配庄家，如果庄家胡，就跟庄，如果非庄家胡就下一家做庄
+			if (mainHasHu) {
 				for (Avatar itemAva : playerList) {
-					if (playerList.get(pickAvatarIndex).getUuId() == itemAva.getUuId()) {
-						// itemAva.avatarVO.setMain(true);
-						bankerAvatar = itemAva;
+					if (bankerAvatar.getUuId() == itemAva.getUuId()) {
 						itemAva.avatarVO.setMain(true);
 					} else {
 						itemAva.avatarVO.setMain(false);
 					}
 				}
 			} else {
-				// 重新分配庄家，下一局胡家坐庄
-				// 鸡平重新分配庄家，如果庄家胡，就跟庄，如果非庄家胡就下一家做庄
-				if (avatar == bankerAvatar) {
-					for (Avatar itemAva : playerList) {
-						if (avatar.getUuId() == itemAva.getUuId()) {
-							itemAva.avatarVO.setMain(true);
-						} else {
-							itemAva.avatarVO.setMain(false);
-						}
+				int mainIndex = 0;
+
+				for (int i = 0; i < 4; i++) {
+					if (playerList.get(i) == bankerAvatar) {
+						mainIndex = i;
+						break;
 					}
-				} else {
-					int mainIndex = 0;
-
-					for (int i = 0; i < 4; i++) {
-						if (playerList.get(i) == bankerAvatar) {
-							mainIndex = i;
-							break;
-						}
-					}
-
-					int nextmainIndex = mainIndex + 1;
-					if (nextmainIndex == 4) {
-						nextmainIndex = 0;
-					}
-
-					for (int i = 0; i < 4; i++) {
-						if (i == nextmainIndex) {
-							playerList.get(i).avatarVO.setMain(true);
-							bankerAvatar = playerList.get(i);
-						} else {
-							playerList.get(i).avatarVO.setMain(false);
-						}
-					}
-
-
 				}
+
+				int nextmainIndex = mainIndex + 1;
+				if (nextmainIndex == 4) {
+					nextmainIndex = 0;
+				}
+
+				for (int i = 0; i < 4; i++) {
+					if (i == nextmainIndex) {
+						playerList.get(i).avatarVO.setMain(true);
+						bankerAvatar = playerList.get(i);
+					} else {
+						playerList.get(i).avatarVO.setMain(false);
+					}
+				}
+
+
 			}
 			// 更新roomlogic的PlayerList信息
 			RoomManager.getInstance().getRoom(playerList.get(0).getRoomVO().getRoomId()).setPlayerList(playerList);
@@ -1650,7 +1652,7 @@ public class PlayCardsLogic {
 			huAvatar.add(bankerAvatar);
 			//// 二期优化注释 pickAvatarIndex = playerList.indexOf(bankerAvatar);//第一个摸牌人就是庄家
 			// 发送消息
-			bankerAvatar.getSession().sendMsg(new ReturnInfoResponse(1, "hu,"));
+			bankerAvatar.getSession().sendMsg(new ReturnInfoResponse(1, "hu:" + listCard.get(nextCardindex) + ","));
 			//bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu,"));
 			//bankerAvatar.getSession().sendMsg(new HuPaiResponse(1, "hu:" + listCard.get(nextCardindex) + ","));
 			bankerAvatar.huAvatarDetailInfo.add(listCard.get(nextCardindex) + ":" + 0);
