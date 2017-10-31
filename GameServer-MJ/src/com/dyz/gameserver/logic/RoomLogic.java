@@ -542,7 +542,10 @@ public class RoomLogic {
                 avatar = playerList.get(i);
                 avatar.avatarVO.setIsReady(false);//重置是否准备状态 10-11新增
                 avatar.avatarVO.setHuReturnObjectVO(new HuReturnObjectVO());
-                avatar.getSession().sendMsg(new StartGameResponse(1, avatar.avatarVO.getPaiArray(), playerList.indexOf(playCardsLogic.bankerAvatar)));
+                avatar.getSession().sendMsg(new StartGameResponse(1, avatar.avatarVO.getPaiArray(),
+                        playerList.indexOf(playCardsLogic.bankerAvatar), playCardsLogic.getFengQuan(),
+                        avatar.avatarVO.getFengWei()));
+                
                 //修改玩家是否玩一局游戏的状态
                 account = AccountService.getInstance().selectByPrimaryKey(avatar.avatarVO.getAccount().getId());
                 if (account.getIsGame().equals("0")) {
