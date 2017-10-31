@@ -63,7 +63,7 @@ public class HuPaiType {
      * count 为1表示单胡  2表示多响
      */
 	public  List<Integer> getHuType(Avatar avatarShu , Avatar avatar , int roomType ,int cardIndex,
-			List<Avatar> playerList,List<Integer> mas,int count,String type,boolean hongzhong){
+			List<Avatar> playerList,List<Integer> mas,int count,String type,boolean hongzhong, int fengQuan){
 		 //区分转转麻将，划水麻将，长沙麻将
 		 if(roomType == 1){
 			 //转转麻将没有大小胡之分
@@ -76,7 +76,7 @@ public class HuPaiType {
 		 }
 		 else if(roomType == 3){
 			 // 广东麻将
-			 guangDong(avatarShu , avatar, cardIndex,playerList,count);
+			 guangDong(avatarShu , avatar, cardIndex,playerList,count, fengQuan);
 
 			 //长沙麻将
 			 //changSha(avatarShu,  avatar ,cardIndex);
@@ -94,7 +94,7 @@ public class HuPaiType {
 	 * @param huCount 是否是一炮多响
 	 */
 	public static void guangDong(Avatar avatarShu , Avatar avatar,  int cardIndex ,
-								 List<Avatar> playerList , int huCount){
+								 List<Avatar> playerList , int huCount, int fengQuan){
 		int score = 0;
 		int huType = avatar.avatarVO.getHuType();
 		int fanshu = 0;
@@ -131,6 +131,18 @@ public class HuPaiType {
 
 			// 在爆胡以内自摸+1番，爆胡以外不加番。
 			if (avatarShu.getUuId() == avatar.getUuId()) {
+				fanshu++;
+			}
+
+			// 在爆胡以内风圈加一番
+			if ((pais[27] >= 3 && fengQuan == 0) || (pais[28] >=3 && fengQuan == 1) ||
+					(pais[29] >= 3 && fengQuan == 2) || (pais[30] >=3 && fengQuan == 3)) {
+				fanshu++;
+			}
+
+			// 在爆胡以内风位加一番
+			if ((pais[27] >= 3 && avatar.avatarVO.getFengWei() == 0) || (pais[28] >=3 && avatar.avatarVO.getFengWei() == 1) ||
+					(pais[29] >= 3 && avatar.avatarVO.getFengWei() == 2) || (pais[30] >=3 && avatar.avatarVO.getFengWei() == 3)) {
 				fanshu++;
 			}
 		}

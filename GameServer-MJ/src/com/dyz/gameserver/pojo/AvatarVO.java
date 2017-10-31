@@ -165,6 +165,18 @@ public class AvatarVO {
 
     private int[] gangArray;
 
+    public int getFengWei() {
+        return fengWei;
+    }
+
+    public void setFengWei(int fengWei) {
+        this.fengWei = fengWei;
+    }
+
+    /**
+     * 风位，0：东，1：南，2：西，3：北
+     */
+    private int fengWei = 0;
 
     /**
      * 存储整局牌的 杠，胡以及得分情况的对象，游戏结束时直接返回对象
