@@ -816,7 +816,8 @@ public class PlayCardsLogic {
                 if (chiAvatar.contains(avatar)) {
                     avatar.avatarVO.setHasMopaiChupai(true);
                     // 回放记录
-                    PlayRecordOperation(playerList.indexOf(avatar), cardIndex, 3, -1, null, null);
+                    int chiType = onePointIndex + twoPointIndex - cardIndex * 2;
+                    PlayRecordOperation(playerList.indexOf(avatar), cardIndex, 3, chiType, null, null);
 
                     // 把出的牌从出牌玩家的chupais中移除掉
                     playerList.get(curAvatarIndex).avatarVO.removeLastChupais();
