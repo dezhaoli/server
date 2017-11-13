@@ -161,7 +161,7 @@ public class PlayCardsLogic {
     boolean canRenHu = true;
     boolean canDiHu = true;
 
-    boolean mainHasHu = false;
+    private boolean mainHasHu = false;
 
     public void setFengQuan(int fengQuan) {
         this.fengQuan = fengQuan;
@@ -417,6 +417,7 @@ public class PlayCardsLogic {
             avatar.avatarVO.setHasMopaiChupai(true);// 修改出牌 摸牌状态
             avatar.qiangHu = true;
             avatar.canHu = true;
+            avatar.cannotHuCards.clear(); // 当有动牌后，那不能胡那一张的规则便解除
             avatar.avatarVO.setHuType(0);// 重置划水麻将胡牌格式
             avatar.avatarVO.setMoPaiCount(avatar.avatarVO.getMoPaiCount() + 1);
 
@@ -494,6 +495,7 @@ public class PlayCardsLogic {
                     playerList.get(i).getSession().sendMsg(new PickCardResponse(1, tempPoint));
                     // 摸牌之后就重置可否胡别人牌的标签
                     playerList.get(i).canHu = true;
+                    avatar.cannotHuCards.clear(); // 当有动牌后，那不能胡那一张的规则便解除
                     // System.out.println("摸牌玩家------index"+pickAvatarIndex+"名字"+playerList.get(i).avatarVO.getAccount().getNickname());
                 }
             }
@@ -575,8 +577,9 @@ public class PlayCardsLogic {
                 // 放弃胡，则检测有没人杠
                 if (huAvatar.contains(avatar)) {
                     huAvatar.remove(avatar);
-                    avatar.canHu = false;
+                    //avatar.canHu = false;
                     avatar.qiangHu = false;
+                    avatar.cannotHuCards.add(putOffCardPoint);
                 }
                 if (gangAvatar.contains(avatar)) {
                     gangAvatar.remove(avatar);
@@ -795,6 +798,8 @@ public class PlayCardsLogic {
      * @return
      */
     public boolean chiCard(Avatar avatar, CardVO cardVo) {
+        avatar.cannotHuCards.clear(); // 当有动牌后，那不能胡那一张的规则便解除
+
         // 吃牌了就不可能是地,人胡
         canDiHu = false;
         canRenHu = false;
@@ -816,6 +821,7 @@ public class PlayCardsLogic {
                 if (chiAvatar.contains(avatar)) {
                     avatar.avatarVO.setHasMopaiChupai(true);
                     // 回放记录
+                    //PlayRecordOperation(playerList.indexOf(avatar), cardIndex, 3, -1, null, null);
                     int chiType = onePointIndex + twoPointIndex - cardIndex * 2;
                     PlayRecordOperation(playerList.indexOf(avatar), cardIndex, 3, chiType, null, null);
 
@@ -872,6 +878,8 @@ public class PlayCardsLogic {
      * @return
      */
     public boolean pengCard(Avatar avatar, int cardIndex) {
+        avatar.cannotHuCards.clear(); // 当有动牌后，那不能胡那一张的规则便解除
+
         // 碰牌了就不可能是地、人胡
         canDiHu = false;
         canRenHu = false;
@@ -948,6 +956,8 @@ public class PlayCardsLogic {
      * @return
      */
     public boolean gangCard(Avatar avatar, int cardPoint, int gangType) {
+        avatar.cannotHuCards.clear(); // 当有动牌后，那不能胡那一张的规则便解除
+
         // 杠牌了就不可能是地、人胡
         canDiHu = false;
         canRenHu = false;
@@ -1303,7 +1313,9 @@ public class PlayCardsLogic {
                     // system.out.println("点炮");
                     // 当摸牌人的索引等于出牌人的索引时，表示点炮了
                     // 点炮 别人点炮的时候查看是否可以胡
-                    if (avatar.canHu) {
+//                    if (avatar.canHu) {
+                    // 点炮 漏胡牌，动牌之前不能胡
+                    if (!avatar.cannotHuCards.contains(cardIndex)) {
                         // 庄胡牌
                         if (avatar == bankerAvatar) {
                             mainHasHu = true;
@@ -1335,6 +1347,11 @@ public class PlayCardsLogic {
                     } else {
                         // system.out.println("放过一个人就要等自己摸牌之后才能胡其他人的牌");
                         huAvatar.remove(avatar);
+//                        gangAvatar.remove(avatar);
+//                        penAvatar.remove(avatar);
+//                        chiAvatar.remove(avatar);
+//                        chuPaiCallBack();
+//                        return false;
                     }
                 } else {
                     // 自摸,
@@ -1366,10 +1383,13 @@ public class PlayCardsLogic {
                     roomVO.updateEndStatistics(avatar.getUuId() + "", "zimo", 1);
                     flag = true;
                 }
-                // 本次游戏已经胡，不进行摸牌
-                hasHu = true;
-                // 游戏回放
-                PlayRecordOperation(playerList.indexOf(avatar), cardIndex, playRecordType, -1, null, null);
+
+                if (flag) {
+                    // 本次游戏已经胡，不进行摸牌
+                    hasHu = true;
+                    // 游戏回放
+                    PlayRecordOperation(playerList.indexOf(avatar), cardIndex, playRecordType, -1, null, null);
+                }
             }
         }
         if (huAvatar.size() == 0 && numb == 1) {
@@ -1635,6 +1655,10 @@ public class PlayCardsLogic {
     private void dealingTheCards() {
         nextCardindex = 0;
         bankerAvatar = null;
+
+        for (int i = 0; i < 4; i++) {
+            playerList.get(i).cannotHuCards.clear();
+        }
 
         for (int i = 0; i < 13; i++) {
             for (int k = 0; k < playerList.size(); k++) {
@@ -2016,6 +2040,10 @@ public class PlayCardsLogic {
      * @return
      */
     public boolean checkHuGuangDong(Avatar avatar, Integer cardIndex) {
+        if (avatar.cannotHuCards.contains(cardIndex)) {
+            return false;
+        }
+
         int[][] paiList = avatar.getPaiArray();
 
         NormalHuPai normalHuPai = new NormalHuPai();

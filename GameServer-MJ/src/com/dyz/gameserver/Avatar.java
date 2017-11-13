@@ -13,10 +13,7 @@ import com.dyz.persist.util.GlobalUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by kevin on 2016/6/18.
@@ -36,6 +33,11 @@ public class Avatar implements GameObj {
 
     //当前玩家能否吃
     public boolean canHu = true;
+
+    /**
+     * 不能胡的牌
+     */
+    public Set cannotHuCards = new HashSet();
 
     public boolean qiangHu = true;
     /**
