@@ -724,7 +724,11 @@ public class PlayCardsLogic {
                         // 胡牌状态为可胡的状态时才行
                         huAvatar.add(ava);
                         //sb.append("hu,");
-                        sb.append("hu:" + putOffCardPoint + ",");
+                        if (ava.cannotHuCards.contains(putOffCardPoint)) {
+                            sb.append("hu:" + -1 + ",");
+                        } else {
+                            sb.append("hu:" + putOffCardPoint + ",");
+                        }
                     }
                     if (ava.checkGang(putOffCardPoint)) {
                         gangAvatar.add(ava);
@@ -1347,11 +1351,6 @@ public class PlayCardsLogic {
                     } else {
                         // system.out.println("放过一个人就要等自己摸牌之后才能胡其他人的牌");
                         huAvatar.remove(avatar);
-//                        gangAvatar.remove(avatar);
-//                        penAvatar.remove(avatar);
-//                        chiAvatar.remove(avatar);
-//                        chuPaiCallBack();
-//                        return false;
                     }
                 } else {
                     // 自摸,
